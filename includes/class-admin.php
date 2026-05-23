@@ -35,7 +35,7 @@ class WRPM_Admin {
             $cap,
             'wrpm-dashboard',
             [$this, 'view_dashboard'],
-            'dashicons-chart-area',
+            'dashicons-blank',
             58
         );
 

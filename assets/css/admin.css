@@ -4,7 +4,7 @@
 .wrpm-wrap {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     color: #1f2937;
-    margin: 20px 20px 20px 0;
+    margin: 24px 24px 24px 8px;
     max-width: 1280px;
 }
 
@@ -13,18 +13,30 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 28px;
+    margin-bottom: 36px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #e5e7eb;
 }
 .wrpm-header h1 {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 700;
     color: #1e1b4b; /* Indigo 950 */
-    margin: 0;
+    margin: 0 0 10px 0;
+    letter-spacing: -0.01em;
 }
 .wrpm-subtitle {
-    font-size: 0.95rem;
+    font-size: 0.975rem;
     color: #6b7280;
-    margin: 4px 0 0 0;
+    margin: 0;
+}
+
+/* Eliminate empty space from sidebar menu since no icon is used */
+#toplevel_page_wrpm-dashboard .wp-menu-image {
+    display: none !important;
+}
+#toplevel_page_wrpm-dashboard .wp-menu-name {
+    padding-left: 12px !important;
+    margin-left: 0 !important;
 }
 
 /* Buttons */

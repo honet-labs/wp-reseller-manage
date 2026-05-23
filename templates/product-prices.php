@@ -72,7 +72,7 @@
                         </div>
 
                         <div class="wrpm-form-group">
-                            <label class="wrpm-label">Seller Pendukung</label>
+                            <label class="wrpm-label">Seller</label>
                             <select name="seller_id" class="wrpm-select wrpm-select2" style="width: 100%;">
                                 <option value="">-- Pilih Seller --</option>
                                 <?php foreach ($sellers as $s): ?>

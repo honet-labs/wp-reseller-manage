@@ -62,8 +62,10 @@ class WRPM_Admin {
         wp_enqueue_script('chartjs', 'https://cdn.jsdelivr.net/npm/chart.js', [], '4.4.1', true);
 
         // Load visual styling assets
-        wp_enqueue_style('wrpm-admin-css', plugins_url('assets/css/admin.css', dirname(__FILE__)), [], WRPM_App::VERSION);
-        wp_enqueue_script('wrpm-admin-js', plugins_url('assets/js/admin.js', dirname(__FILE__)), ['jquery', 'select2', 'chartjs'], WRPM_App::VERSION, true);
+        $css_ver = file_exists(dirname(dirname(__FILE__)) . '/assets/css/admin.css') ? filemtime(dirname(dirname(__FILE__)) . '/assets/css/admin.css') : time();
+        $js_ver = file_exists(dirname(dirname(__FILE__)) . '/assets/js/admin.js') ? filemtime(dirname(dirname(__FILE__)) . '/assets/js/admin.js') : time();
+        wp_enqueue_style('wrpm-admin-css', plugins_url('assets/css/admin.css', dirname(__FILE__)), [], $css_ver);
+        wp_enqueue_script('wrpm-admin-js', plugins_url('assets/js/admin.js', dirname(__FILE__)), ['jquery', 'select2', 'chartjs'], $js_ver, true);
     }
 
     // View router helper

@@ -109,6 +109,9 @@
                         <p>Belum ada produk aktif yang sedang dilacak.</p>
                     </div>
                 <?php else: ?>
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+                        <input type="text" class="wrpm-input wrpm-table-search" placeholder="Cari data..." style="max-width: 300px; width: 100%;" />
+                    </div>
                     <table class="wrpm-table">
                         <thead>
                             <tr>

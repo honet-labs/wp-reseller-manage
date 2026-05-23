@@ -31,4 +31,12 @@ jQuery(document).ready(function($) {
             // In a real system, you can fetch via REST or set data attributes.
         }
     });
+
+    // Live table search filtering
+    $('.wrpm-table-search').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $(this).closest('.wrpm-card-body').find('.wrpm-table tbody tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
 });

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 if (!defined('ABSPATH')) { exit; }
 
 class OKJ_DB {
@@ -229,7 +229,7 @@ class OKJ_DB {
         delete_option('okj_settings_v1');
     }
 
-    private static function ensure_caps() {
+    public static function ensure_caps() {
         $admin = get_role('administrator');
         if ($admin) {
             $admin->add_cap('okj_manage');

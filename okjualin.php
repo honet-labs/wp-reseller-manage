@@ -50,6 +50,11 @@ class OKJ_App {
         // DB Upgrade handler
         add_action('admin_init', [$this, 'maybe_upgrade_db']);
 
+        // Ensure capabilities are always provisioned (critical after rebranding)
+        add_action('admin_init', function() {
+            OKJ_DB::ensure_caps();
+        });
+
         // Listen to shortlink redirects
         add_action('parse_request', [$this, 'handle_shortlink_redirect']);
 

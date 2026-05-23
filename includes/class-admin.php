@@ -124,7 +124,28 @@ class WRPM_Admin {
             $id = !empty($_GET['id']) ? sanitize_text_field($_GET['id']) : '';
             $row = $id ? $wpdb->get_row($wpdb->prepare("SELECT * FROM " . WRPM_DB::get_table('product_prices') . " WHERE id = %s", $id), ARRAY_A) : null;
             $sellers = $wpdb->get_results("SELECT id, name FROM " . WRPM_DB::get_table('sellers') . " ORDER BY name ASC", ARRAY_A);
-            $this->render_template('product-prices', ['action' => $action, 'row' => $row, 'sellers' => $sellers]);
+
+            // Fetch all unique tags from stored products
+            $all_tags_raw = $wpdb->get_col("SELECT DISTINCT tags FROM " . WRPM_DB::get_table('product_prices') . " WHERE tags IS NOT NULL AND tags != ''");
+            $existing_tags = [];
+            if (is_array($all_tags_raw)) {
+                foreach ($all_tags_raw as $tags_str) {
+                    $splitted = array_map('trim', explode(',', $tags_str));
+                    foreach ($splitted as $tag) {
+                        if ($tag !== '' && !in_array($tag, $existing_tags)) {
+                            $existing_tags[] = $tag;
+                        }
+                    }
+                }
+            }
+            sort($existing_tags);
+
+            $this->render_template('product-prices', [
+                'action' => $action, 
+                'row' => $row, 
+                'sellers' => $sellers,
+                'existing_tags' => $existing_tags
+            ]);
         } else {
             $rows = $wpdb->get_results("SELECT p.*, s.name as seller_name FROM " . WRPM_DB::get_table('product_prices') . " p LEFT JOIN " . WRPM_DB::get_table('sellers') . " s ON p.seller_id = s.id ORDER BY p.name ASC", ARRAY_A);
             $this->render_template('product-prices', ['action' => 'list', 'rows' => $rows]);
@@ -227,7 +248,7 @@ class WRPM_Admin {
             'id' => $id,
             'name' => sanitize_text_field($_POST['name']),
             'category' => sanitize_text_field($_POST['category']),
-            'tags' => sanitize_text_field($_POST['tags']),
+            'tags' => !empty($_POST['tags']) && is_array($_POST['tags']) ? implode(',', array_map('sanitize_text_field', array_map('trim', $_POST['tags']))) : (!empty($_POST['tags']) ? sanitize_text_field($_POST['tags']) : ''),
             'seller_id' => !empty($_POST['seller_id']) ? sanitize_text_field($_POST['seller_id']) : null,
             'reseller_price' => (float)$_POST['reseller_price'],
             'sale_price' => (float)$_POST['sale_price'],

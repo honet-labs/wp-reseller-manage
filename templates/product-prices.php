@@ -33,8 +33,27 @@
                         </div>
 
                         <div class="wrpm-form-group">
-                            <label class="wrpm-label">Tags (Pisahkan dengan koma)</label>
-                            <input type="text" name="tags" class="wrpm-input" value="<?php echo $row ? esc_attr($row['tags']) : ''; ?>" />
+                            <label class="wrpm-label">Tags (Pilih atau Ketik Baru)</label>
+                            <select name="tags[]" class="wrpm-select wrpm-select2-tags" multiple="multiple" style="width: 100%;">
+                                <?php
+                                $selected_tags = [];
+                                if ($row && !empty($row['tags'])) {
+                                    $selected_tags = array_map('trim', explode(',', $row['tags']));
+                                }
+                                // Render selected tags first so they are selected
+                                foreach ($selected_tags as $t) {
+                                    echo '<option value="' . esc_attr($t) . '" selected>' . esc_html($t) . '</option>';
+                                }
+                                // Render other existing unique tags
+                                if (!empty($existing_tags)) {
+                                    foreach ($existing_tags as $t) {
+                                        if (!in_array($t, $selected_tags)) {
+                                            echo '<option value="' . esc_attr($t) . '">' . esc_html($t) . '</option>';
+                                        }
+                                    }
+                                }
+                                ?>
+                            </select>
                         </div>
 
                         <div class="wrpm-form-group">

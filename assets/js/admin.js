@@ -6,6 +6,13 @@ jQuery(document).ready(function($) {
             allowClear: true,
             width: 'resolve'
         });
+
+        $('.wrpm-select2-tags').select2({
+            placeholder: 'Pilih atau ketik tag baru...',
+            tags: true,
+            tokenSeparators: [','],
+            width: 'resolve'
+        });
     }
 
     // Dynamic field calculations (e.g. autofilling dates, prices, etc)

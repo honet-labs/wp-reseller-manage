@@ -73,13 +73,13 @@
 
                         <div class="wrpm-form-group">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                                <label class="wrpm-label" style="margin-bottom: 0;">Seller</label>
+                                <label class="wrpm-label" style="margin-bottom: 0;">Seller/Supplier/Provider</label>
                                 <a href="#" class="wrpm-quick-add-seller-btn" style="text-decoration: none; font-size: 12px; color: #4f46e5; font-weight: 600; display: inline-flex; align-items: center;">
-                                    <span class="dashicons dashicons-plus-alt2" style="font-size: 14px; width: 14px; height: 14px; margin-right: 2px; margin-top: 1px;"></span> Tambah Seller Baru
+                                    <span class="dashicons dashicons-plus-alt2" style="font-size: 14px; width: 14px; height: 14px; margin-right: 2px; margin-top: 1px;"></span> Tambah Seller/Supplier/Provider Baru
                                 </a>
                             </div>
                             <select name="seller_id" class="wrpm-select wrpm-select2" style="width: 100%;">
-                                <option value="">-- Pilih Seller --</option>
+                                <option value="">-- Pilih Seller/Supplier/Provider --</option>
                                 <?php foreach ($sellers as $s): ?>
                                     <option value="<?php echo esc_attr($s['id']); ?>" <?php echo $row && $row['seller_id'] === $s['id'] ? 'selected' : ''; ?>>
                                         <?php echo esc_html($s['name']); ?>
@@ -154,7 +154,7 @@
                                 <th>Kategori</th>
                                 <th>Tags</th>
                                 <th>Keterangan</th>
-                                <th>Seller</th>
+                                <th>Seller/Supplier/Provider</th>
                                 <th>Durasi</th>
                                 <th>Harga Beli</th>
                                 <th>Harga Jual</th>

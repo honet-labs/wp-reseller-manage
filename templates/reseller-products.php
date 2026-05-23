@@ -28,9 +28,12 @@
                                 <option value="">-- Pilih Master Harga --</option>
                                 <?php foreach ($prices as $p): 
                                     $short_id = substr($p['id'], 0, 8);
+                                    $seller_info = !empty($p['seller_name']) ? ' - ' . $p['seller_name'] : ' - Tanpa Seller';
                                 ?>
-                                    <option value="<?php echo esc_attr($p['id']); ?>" <?php echo $row && $row['price_id'] === $p['id'] ? 'selected' : ''; ?>>
-                                        <?php echo esc_html($short_id . ' - ' . $p['name'] . ' - ' . $p['duration_days'] . ' Hari'); ?>
+                                    <option value="<?php echo esc_attr($p['id']); ?>" 
+                                            data-seller-id="<?php echo esc_attr($p['seller_id']); ?>" 
+                                            <?php echo $row && $row['price_id'] === $p['id'] ? 'selected' : ''; ?>>
+                                        <?php echo esc_html($short_id . ' - ' . $p['name'] . ' - ' . $p['duration_days'] . ' Hari' . $seller_info); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -42,7 +45,7 @@
                         </div>
 
                         <div class="wrpm-form-group">
-                            <label class="wrpm-label">Seller Pendukung</label>
+                            <label class="wrpm-label">Seller</label>
                             <select name="seller_id" class="wrpm-select wrpm-select2" style="width: 100%;">
                                 <option value="">-- Pilih Seller --</option>
                                 <?php foreach ($sellers as $s): ?>
@@ -51,16 +54,6 @@
                                     </option>
                                 <?php endforeach; ?>
                             </select>
-                        </div>
-
-                        <div class="wrpm-form-group">
-                            <label class="wrpm-label">Nama Reseller Supplier</label>
-                            <input type="text" name="reseller_name" class="wrpm-input" value="<?php echo $row ? esc_attr($row['reseller_name']) : ''; ?>" />
-                        </div>
-
-                        <div class="wrpm-form-group">
-                            <label class="wrpm-label">Kontak Reseller</label>
-                            <input type="text" name="reseller_contact" class="wrpm-input" value="<?php echo $row ? esc_attr($row['reseller_contact']) : ''; ?>" placeholder="Telepon atau WA" />
                         </div>
 
                         <div class="wrpm-form-group">

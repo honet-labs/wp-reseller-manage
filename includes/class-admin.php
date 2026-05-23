@@ -167,7 +167,7 @@ class WRPM_Admin {
         if ($action === 'add' || $action === 'edit') {
             $id = !empty($_GET['id']) ? sanitize_text_field($_GET['id']) : '';
             $row = $id ? $wpdb->get_row($wpdb->prepare("SELECT * FROM " . WRPM_DB::get_table('reseller_products') . " WHERE id = %s", $id), ARRAY_A) : null;
-            $prices = $wpdb->get_results("SELECT id, name, duration_days, sale_price FROM " . WRPM_DB::get_table('product_prices') . " ORDER BY name ASC", ARRAY_A);
+            $prices = $wpdb->get_results("SELECT p.id, p.name, p.duration_days, p.sale_price, p.seller_id, s.name as seller_name FROM " . WRPM_DB::get_table('product_prices') . " p LEFT JOIN " . WRPM_DB::get_table('sellers') . " s ON p.seller_id = s.id ORDER BY p.name ASC", ARRAY_A);
             $sellers = $wpdb->get_results("SELECT id, name FROM " . WRPM_DB::get_table('sellers') . " ORDER BY name ASC", ARRAY_A);
             $this->render_template('reseller-products', ['action' => $action, 'row' => $row, 'prices' => $prices, 'sellers' => $sellers]);
         } else {

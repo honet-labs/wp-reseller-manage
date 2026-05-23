@@ -23,12 +23,13 @@ jQuery(document).ready(function($) {
     }
 
     // Dynamic field calculations (e.g. autofilling dates, prices, etc)
-    // When selecting reseller product on active products, auto-fill price
-    $('select[name="reseller_product_id"]').on('change', function() {
-        var rp_id = $(this).val();
-        if (rp_id) {
-            // Find option elements if metadata exists or fallback
-            // In a real system, you can fetch via REST or set data attributes.
+    // When selecting master product reference, auto-fill the Seller dropdown
+    $('select[name="price_id"]').on('change', function() {
+        var seller_id = $(this).find(':selected').data('seller-id');
+        if (seller_id) {
+            $('select[name="seller_id"]').val(seller_id).trigger('change');
+        } else {
+            $('select[name="seller_id"]').val('').trigger('change');
         }
     });
 

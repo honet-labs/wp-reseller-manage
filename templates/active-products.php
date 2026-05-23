@@ -132,8 +132,21 @@
                                     <td><code><?php echo esc_html(substr($r['id'], 0, 8)); ?></code></td>
                                     <td><strong><?php echo esc_html($r['product_label']); ?></strong></td>
                                     <td>
-                                        <div><strong><?php echo esc_html($r['customer_name']); ?></strong></div>
-                                        <small class="wrpm-text-muted"><?php echo esc_html($r['customer_contact']); ?></small>
+                                         <?php if (!empty($r['customer_name'])): ?>
+                                             <a href="#" class="wrpm-view-customer-detail" 
+                                                data-name="<?php echo esc_attr($r['customer_name']); ?>"
+                                                data-email="<?php echo esc_attr($r['customer_email'] ?: '-'); ?>"
+                                                data-phone="<?php echo esc_attr($r['customer_phone'] ?: '-'); ?>"
+                                                data-telegram="<?php echo esc_attr($r['customer_telegram'] ?: '-'); ?>"
+                                                data-whatsapp="<?php echo esc_attr($r['customer_whatsapp'] ?: '-'); ?>"
+                                                style="text-decoration: none; color: #4f46e5; font-weight: 600; border-bottom: 1px dashed #4f46e5; padding-bottom: 2px;"
+                                                title="Lihat Detail Customer">
+                                                 <?php echo esc_html($r['customer_name']); ?>
+                                             </a>
+                                         <?php else: ?>
+                                             <span class="wrpm-text-muted">-</span>
+                                         <?php endif; ?>
+                                         <div style="margin-top: 4px;"><small class="wrpm-text-muted"><?php echo esc_html($r['customer_contact']); ?></small></div>
                                     </td>
                                     <td><?php echo esc_html($r['start_date']); ?></td>
                                     <td><span class="dashicons dashicons-calendar-alt wrpm-text-muted"></span> <?php echo esc_html($r['expires_at']); ?></td>
@@ -175,3 +188,58 @@
         </div>
     <?php endif; ?>
 </div>
+
+<!-- Modal Popup Detail Customer -->
+<div id="wrpmCustomerModal" class="wrpm-modal" style="display: none; position: fixed; z-index: 999999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center;">
+    <div class="wrpm-modal-content" style="background-color: #ffffff; border-radius: 12px; max-width: 500px; width: 90%; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); border: 1px solid #e2e8f0; animation: wrpmFadeIn 0.25s ease-out;">
+        <div class="wrpm-modal-header" style="padding: 16px 24px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: #0f172a; display: flex; align-items: center;">
+                <span class="dashicons dashicons-admin-users" style="margin-right: 8px; color: #4f46e5; font-size: 20px; width: 20px; height: 20px;"></span>
+                Detail Customer
+            </h3>
+            <span class="wrpm-customer-modal-close" style="color: #94a3b8; font-size: 28px; font-weight: bold; cursor: pointer; line-height: 1; transition: color 0.2s;">&times;</span>
+        </div>
+        <div class="wrpm-modal-body" style="padding: 24px; color: #334155; font-size: 0.95rem; line-height: 1.6;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 10px 0; font-weight: 600; color: #64748b; width: 35%;">Nama Customer</td>
+                    <td id="wrpmCustomerName" style="padding: 10px 0; color: #0f172a; font-weight: 600;">-</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 10px 0; font-weight: 600; color: #64748b;">Email</td>
+                    <td id="wrpmCustomerEmail" style="padding: 10px 0; color: #0f172a;">-</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 10px 0; font-weight: 600; color: #64748b;">Telepon</td>
+                    <td id="wrpmCustomerPhone" style="padding: 10px 0; color: #0f172a;">-</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 10px 0; font-weight: 600; color: #64748b;">Telegram Chat ID</td>
+                    <td id="wrpmCustomerTelegram" style="padding: 10px 0; color: #0f172a;">-</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px 0; font-weight: 600; color: #64748b;">WhatsApp</td>
+                    <td id="wrpmCustomerWhatsapp" style="padding: 10px 0; color: #0f172a;">-</td>
+                </tr>
+            </table>
+        </div>
+        <div class="wrpm-modal-footer" style="padding: 12px 24px; border-top: 1px solid #f1f5f9; display: flex; justify-content: flex-end;">
+            <button class="wrpm-btn wrpm-btn-secondary wrpm-customer-modal-close-btn" style="cursor: pointer; padding: 8px 16px; border-radius: 6px; background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; font-weight: 500;">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes wrpmFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+.wrpm-customer-modal-close:hover {
+    color: #475569 !important;
+}
+.wrpm-view-customer-detail:hover {
+    color: #4338ca !important;
+    border-bottom-color: #4338ca !important;
+}
+</style>
+

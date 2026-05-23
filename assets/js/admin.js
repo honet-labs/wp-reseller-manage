@@ -59,10 +59,60 @@ jQuery(document).ready(function($) {
         $('#wrpmDetailModal').css('display', 'none');
     });
 
-    // Close modal when clicking outside of it
+    // Modal display logic for seller details
+    $('.wrpm-view-seller-detail').on('click', function(e) {
+        e.preventDefault();
+        var name = $(this).data('name');
+        var email = $(this).data('email') || '-';
+        var phone = $(this).data('phone') || '-';
+        var telegram = $(this).data('telegram') || '-';
+        var whatsapp = $(this).data('whatsapp') || '-';
+
+        $('#wrpmSellerName').text(name);
+        $('#wrpmSellerEmail').text(email);
+        $('#wrpmSellerPhone').text(phone);
+        $('#wrpmSellerTelegram').text(telegram);
+        $('#wrpmSellerWhatsapp').text(whatsapp);
+
+        $('#wrpmSellerModal').css('display', 'flex');
+    });
+
+    $('.wrpm-seller-modal-close, .wrpm-seller-modal-close-btn').on('click', function() {
+        $('#wrpmSellerModal').css('display', 'none');
+    });
+
+    // Modal display logic for customer details
+    $('.wrpm-view-customer-detail').on('click', function(e) {
+        e.preventDefault();
+        var name = $(this).data('name');
+        var email = $(this).data('email') || '-';
+        var phone = $(this).data('phone') || '-';
+        var telegram = $(this).data('telegram') || '-';
+        var whatsapp = $(this).data('whatsapp') || '-';
+
+        $('#wrpmCustomerName').text(name);
+        $('#wrpmCustomerEmail').text(email);
+        $('#wrpmCustomerPhone').text(phone);
+        $('#wrpmCustomerTelegram').text(telegram);
+        $('#wrpmCustomerWhatsapp').text(whatsapp);
+
+        $('#wrpmCustomerModal').css('display', 'flex');
+    });
+
+    $('.wrpm-customer-modal-close, .wrpm-customer-modal-close-btn').on('click', function() {
+        $('#wrpmCustomerModal').css('display', 'none');
+    });
+
+    // Close modals when clicking outside of them
     $(window).on('click', function(e) {
         if ($(e.target).is('#wrpmDetailModal')) {
             $('#wrpmDetailModal').css('display', 'none');
+        }
+        if ($(e.target).is('#wrpmSellerModal')) {
+            $('#wrpmSellerModal').css('display', 'none');
+        }
+        if ($(e.target).is('#wrpmCustomerModal')) {
+            $('#wrpmCustomerModal').css('display', 'none');
         }
     });
 });

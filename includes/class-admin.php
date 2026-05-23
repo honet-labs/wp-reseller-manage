@@ -155,7 +155,7 @@ class WRPM_Admin {
                 'existing_categories' => $existing_categories
             ]);
         } else {
-            $rows = $wpdb->get_results("SELECT p.*, s.name as seller_name FROM " . WRPM_DB::get_table('product_prices') . " p LEFT JOIN " . WRPM_DB::get_table('sellers') . " s ON p.seller_id = s.id ORDER BY p.name ASC", ARRAY_A);
+            $rows = $wpdb->get_results("SELECT p.*, s.name as seller_name, s.email as seller_email, s.phone as seller_phone, s.telegram as seller_telegram, s.whatsapp as seller_whatsapp FROM " . WRPM_DB::get_table('product_prices') . " p LEFT JOIN " . WRPM_DB::get_table('sellers') . " s ON p.seller_id = s.id ORDER BY p.name ASC", ARRAY_A);
             $this->render_template('product-prices', ['action' => 'list', 'rows' => $rows]);
         }
     }
@@ -215,7 +215,7 @@ class WRPM_Admin {
             $resellers = $wpdb->get_results("SELECT id, product_name, duration_days, price FROM " . WRPM_DB::get_table('reseller_products') . " ORDER BY product_name ASC", ARRAY_A);
             $this->render_template('active-products', ['action' => $action, 'row' => $row, 'customers' => $customers, 'resellers' => $resellers]);
         } else {
-            $rows = $wpdb->get_results("SELECT * FROM " . WRPM_DB::get_table('active_products') . " ORDER BY expires_at ASC", ARRAY_A);
+            $rows = $wpdb->get_results("SELECT a.*, c.name as customer_name, c.email as customer_email, c.phone as customer_phone, c.telegram as customer_telegram, c.whatsapp as customer_whatsapp FROM " . WRPM_DB::get_table('active_products') . " a LEFT JOIN " . WRPM_DB::get_table('customers') . " c ON a.customer_id = c.id ORDER BY a.expires_at ASC", ARRAY_A);
             $this->render_template('active-products', ['action' => 'list', 'rows' => $rows]);
         }
     }

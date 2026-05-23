@@ -143,6 +143,7 @@
                             <tr>
                                 <th>Nama Produk</th>
                                 <th>Kategori</th>
+                                <th>Tags</th>
                                 <th>Seller</th>
                                 <th>Durasi</th>
                                 <th>Harga Beli</th>
@@ -155,6 +156,18 @@
                                 <tr>
                                     <td><strong><?php echo esc_html($r['name']); ?></strong></td>
                                     <td><span class="wrpm-badge wrpm-badge-secondary"><?php echo esc_html($r['category'] ?: 'Umum'); ?></span></td>
+                                    <td>
+                                        <?php
+                                        if (!empty($r['tags'])) {
+                                            $tags_array = array_map('trim', explode(',', $r['tags']));
+                                            foreach ($tags_array as $t) {
+                                                echo '<span class="wrpm-badge" style="margin-right: 4px; background: #e0e7ff; color: #4338ca; border: 1px solid #c7d2fe;">' . esc_html($t) . '</span>';
+                                            }
+                                        } else {
+                                            echo '<span class="wrpm-text-muted">-</span>';
+                                        }
+                                        ?>
+                                    </td>
                                     <td><?php echo esc_html($r['seller_name'] ?: '-'); ?></td>
                                     <td><?php echo esc_html($r['duration_days']); ?> Hari</td>
                                     <td>Rp <?php echo number_format_i18n($r['reseller_price'], 0); ?></td>

@@ -219,6 +219,30 @@
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+
+                    <!-- Pagination -->
+                    <?php if (isset($total_pages) && $total_pages > 1): 
+                        $current_offset = ($paged - 1) * $per_page;
+                    ?>
+                        <div class="wrpm-pagination">
+                            <div class="wrpm-pagination-info">
+                                Menampilkan <?php echo ($current_offset + 1); ?> - <?php echo min($total_rows, $current_offset + $per_page); ?> dari <?php echo $total_rows; ?> data
+                            </div>
+                            <div class="wrpm-pagination-links">
+                                <?php
+                                echo paginate_links([
+                                    'base' => add_query_arg('paged', '%#%'),
+                                    'format' => '',
+                                    'prev_text' => '&laquo; Prev',
+                                    'next_text' => 'Next &raquo;',
+                                    'total' => $total_pages,
+                                    'current' => $paged,
+                                    'type' => 'plain'
+                                ]);
+                                ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
         </div>

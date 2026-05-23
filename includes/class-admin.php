@@ -159,8 +159,22 @@ class WRPM_Admin {
                 'existing_categories' => $existing_categories
             ]);
         } else {
-            $rows = $wpdb->get_results("SELECT p.*, s.name as seller_name, s.email as seller_email, s.phone as seller_phone, s.telegram as seller_telegram, s.whatsapp as seller_whatsapp FROM " . WRPM_DB::get_table('product_prices') . " p LEFT JOIN " . WRPM_DB::get_table('sellers') . " s ON p.seller_id = s.id ORDER BY p.name ASC", ARRAY_A);
-            $this->render_template('product-prices', ['action' => 'list', 'rows' => $rows]);
+            $per_page = 15;
+            $paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+            $offset = ($paged - 1) * $per_page;
+
+            $total_rows = $wpdb->get_var("SELECT COUNT(*) FROM " . WRPM_DB::get_table('product_prices'));
+            $total_pages = ceil($total_rows / $per_page);
+
+            $rows = $wpdb->get_results($wpdb->prepare("SELECT p.*, s.name as seller_name, s.email as seller_email, s.phone as seller_phone, s.telegram as seller_telegram, s.whatsapp as seller_whatsapp FROM " . WRPM_DB::get_table('product_prices') . " p LEFT JOIN " . WRPM_DB::get_table('sellers') . " s ON p.seller_id = s.id ORDER BY p.name ASC LIMIT %d OFFSET %d", $per_page, $offset), ARRAY_A);
+            $this->render_template('product-prices', [
+                'action' => 'list', 
+                'rows' => $rows,
+                'paged' => $paged,
+                'total_pages' => $total_pages,
+                'total_rows' => $total_rows,
+                'per_page' => $per_page
+            ]);
         }
     }
 
@@ -175,8 +189,22 @@ class WRPM_Admin {
             $sellers = $wpdb->get_results("SELECT id, name FROM " . WRPM_DB::get_table('sellers') . " ORDER BY name ASC", ARRAY_A);
             $this->render_template('reseller-products', ['action' => $action, 'row' => $row, 'prices' => $prices, 'sellers' => $sellers]);
         } else {
-            $rows = $wpdb->get_results("SELECT r.*, s.name as seller_name FROM " . WRPM_DB::get_table('reseller_products') . " r LEFT JOIN " . WRPM_DB::get_table('sellers') . " s ON r.seller_id = s.id ORDER BY r.product_name ASC", ARRAY_A);
-            $this->render_template('reseller-products', ['action' => 'list', 'rows' => $rows]);
+            $per_page = 15;
+            $paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+            $offset = ($paged - 1) * $per_page;
+
+            $total_rows = $wpdb->get_var("SELECT COUNT(*) FROM " . WRPM_DB::get_table('reseller_products'));
+            $total_pages = ceil($total_rows / $per_page);
+
+            $rows = $wpdb->get_results($wpdb->prepare("SELECT r.*, s.name as seller_name FROM " . WRPM_DB::get_table('reseller_products') . " r LEFT JOIN " . WRPM_DB::get_table('sellers') . " s ON r.seller_id = s.id ORDER BY r.product_name ASC LIMIT %d OFFSET %d", $per_page, $offset), ARRAY_A);
+            $this->render_template('reseller-products', [
+                'action' => 'list', 
+                'rows' => $rows,
+                'paged' => $paged,
+                'total_pages' => $total_pages,
+                'total_rows' => $total_rows,
+                'per_page' => $per_page
+            ]);
         }
     }
 
@@ -189,8 +217,22 @@ class WRPM_Admin {
             $row = $id ? $wpdb->get_row($wpdb->prepare("SELECT * FROM " . WRPM_DB::get_table('customers') . " WHERE id = %s", $id), ARRAY_A) : null;
             $this->render_template('customers', ['action' => $action, 'row' => $row]);
         } else {
-            $rows = $wpdb->get_results("SELECT * FROM " . WRPM_DB::get_table('customers') . " ORDER BY name ASC", ARRAY_A);
-            $this->render_template('customers', ['action' => 'list', 'rows' => $rows]);
+            $per_page = 15;
+            $paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+            $offset = ($paged - 1) * $per_page;
+
+            $total_rows = $wpdb->get_var("SELECT COUNT(*) FROM " . WRPM_DB::get_table('customers'));
+            $total_pages = ceil($total_rows / $per_page);
+
+            $rows = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . WRPM_DB::get_table('customers') . " ORDER BY name ASC LIMIT %d OFFSET %d", $per_page, $offset), ARRAY_A);
+            $this->render_template('customers', [
+                'action' => 'list', 
+                'rows' => $rows,
+                'paged' => $paged,
+                'total_pages' => $total_pages,
+                'total_rows' => $total_rows,
+                'per_page' => $per_page
+            ]);
         }
     }
 
@@ -203,8 +245,22 @@ class WRPM_Admin {
             $row = $id ? $wpdb->get_row($wpdb->prepare("SELECT * FROM " . WRPM_DB::get_table('sellers') . " WHERE id = %s", $id), ARRAY_A) : null;
             $this->render_template('sellers', ['action' => $action, 'row' => $row]);
         } else {
-            $rows = $wpdb->get_results("SELECT * FROM " . WRPM_DB::get_table('sellers') . " ORDER BY name ASC", ARRAY_A);
-            $this->render_template('sellers', ['action' => 'list', 'rows' => $rows]);
+            $per_page = 15;
+            $paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+            $offset = ($paged - 1) * $per_page;
+
+            $total_rows = $wpdb->get_var("SELECT COUNT(*) FROM " . WRPM_DB::get_table('sellers'));
+            $total_pages = ceil($total_rows / $per_page);
+
+            $rows = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . WRPM_DB::get_table('sellers') . " ORDER BY name ASC LIMIT %d OFFSET %d", $per_page, $offset), ARRAY_A);
+            $this->render_template('sellers', [
+                'action' => 'list', 
+                'rows' => $rows,
+                'paged' => $paged,
+                'total_pages' => $total_pages,
+                'total_rows' => $total_rows,
+                'per_page' => $per_page
+            ]);
         }
     }
 
@@ -219,8 +275,22 @@ class WRPM_Admin {
             $resellers = $wpdb->get_results("SELECT r.id, r.product_name, r.duration_days, r.price, r.purchase_date, s.name as seller_name FROM " . WRPM_DB::get_table('reseller_products') . " r LEFT JOIN " . WRPM_DB::get_table('sellers') . " s ON r.seller_id = s.id ORDER BY r.product_name ASC", ARRAY_A);
             $this->render_template('active-products', ['action' => $action, 'row' => $row, 'customers' => $customers, 'resellers' => $resellers]);
         } else {
-            $rows = $wpdb->get_results("SELECT a.*, c.name as customer_name, c.email as customer_email, c.phone as customer_phone, c.telegram as customer_telegram, c.whatsapp as customer_whatsapp FROM " . WRPM_DB::get_table('active_products') . " a LEFT JOIN " . WRPM_DB::get_table('customers') . " c ON a.customer_id = c.id ORDER BY a.expires_at ASC", ARRAY_A);
-            $this->render_template('active-products', ['action' => 'list', 'rows' => $rows]);
+            $per_page = 15;
+            $paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+            $offset = ($paged - 1) * $per_page;
+
+            $total_rows = $wpdb->get_var("SELECT COUNT(*) FROM " . WRPM_DB::get_table('active_products'));
+            $total_pages = ceil($total_rows / $per_page);
+
+            $rows = $wpdb->get_results($wpdb->prepare("SELECT a.*, c.name as customer_name, c.email as customer_email, c.phone as customer_phone, c.telegram as customer_telegram, c.whatsapp as customer_whatsapp FROM " . WRPM_DB::get_table('active_products') . " a LEFT JOIN " . WRPM_DB::get_table('customers') . " c ON a.customer_id = c.id ORDER BY a.expires_at ASC LIMIT %d OFFSET %d", $per_page, $offset), ARRAY_A);
+            $this->render_template('active-products', [
+                'action' => 'list', 
+                'rows' => $rows,
+                'paged' => $paged,
+                'total_pages' => $total_pages,
+                'total_rows' => $total_rows,
+                'per_page' => $per_page
+            ]);
         }
     }
 

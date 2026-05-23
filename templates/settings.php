@@ -51,15 +51,28 @@
                         </div>
                         <div class="wrpm-form-group wrpm-mt-1">
                             <label class="wrpm-label">WAHA API URL</label>
-                            <input type="url" name="waha_api_url" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['waha_api_url']) ? $settings['waha_api_url'] : ''); ?>" placeholder="http://localhost:3000" />
+                            <input type="url" name="waha_api_url" id="wrpm-waha-url" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['waha_api_url']) ? $settings['waha_api_url'] : ''); ?>" placeholder="https://waga.honet.web.id" />
                         </div>
                         <div class="wrpm-form-group wrpm-mt-1">
                             <label class="wrpm-label">WAHA API Token (Bearer Authorization)</label>
-                            <input type="password" name="waha_api_token" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['waha_api_token']) ? $settings['waha_api_token'] : ''); ?>" />
+                            <input type="password" name="waha_api_token" id="wrpm-waha-token" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['waha_api_token']) ? $settings['waha_api_token'] : ''); ?>" />
                         </div>
                         <div class="wrpm-form-group wrpm-mt-1">
                             <label class="wrpm-label">Session Name (Default: default)</label>
-                            <input type="text" name="waha_session_name" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['waha_session_name']) ? $settings['waha_session_name'] : 'default'); ?>" />
+                            <input type="text" name="waha_session_name" id="wrpm-waha-session" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['waha_session_name']) ? $settings['waha_session_name'] : 'default'); ?>" />
+                        </div>
+                        
+                        <!-- Test Connection Row -->
+                        <div class="wrpm-mt-2" style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                            <div style="flex-grow: 1; min-width: 200px;">
+                                <input type="text" id="wrpm-waha-test-phone" class="wrpm-input" style="height: 35px; font-size: 13px;" placeholder="Masukkan No HP Tes (Contoh: 08123...)" />
+                            </div>
+                            <div>
+                                <button type="button" id="wrpm-btn-test-waha" class="wrpm-btn wrpm-btn-secondary" style="height: 35px; padding: 0 15px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center;">
+                                    <span class="dashicons dashicons-phone" style="margin-right: 5px; font-size: 16px; width: 16px; height: 16px;"></span> Test Kirim WA
+                                </button>
+                            </div>
+                            <div id="wrpm-waha-test-status" style="font-size: 13px; font-weight: 600;"></div>
                         </div>
                     </div>
                 </div>
@@ -77,11 +90,21 @@
                         </div>
                         <div class="wrpm-form-group wrpm-mt-1">
                             <label class="wrpm-label">Telegram Bot Token</label>
-                            <input type="password" name="telegram_bot_token" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['telegram_bot_token']) ? $settings['telegram_bot_token'] : ''); ?>" />
+                            <input type="password" name="telegram_bot_token" id="wrpm-tele-token" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['telegram_bot_token']) ? $settings['telegram_bot_token'] : ''); ?>" />
                         </div>
                         <div class="wrpm-form-group wrpm-mt-1">
                             <label class="wrpm-label">Default Telegram Chat ID / Channel ID</label>
-                            <input type="text" name="telegram_default_chat_id" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['telegram_default_chat_id']) ? $settings['telegram_default_chat_id'] : ''); ?>" />
+                            <input type="text" name="telegram_default_chat_id" id="wrpm-tele-chatid" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['telegram_default_chat_id']) ? $settings['telegram_default_chat_id'] : ''); ?>" />
+                        </div>
+                        
+                        <!-- Test Connection Row -->
+                        <div class="wrpm-mt-2" style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                            <div>
+                                <button type="button" id="wrpm-btn-test-telegram" class="wrpm-btn wrpm-btn-secondary" style="height: 35px; padding: 0 15px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center;">
+                                    <span class="dashicons dashicons-megaphone" style="margin-right: 5px; font-size: 16px; width: 16px; height: 16px;"></span> Test Kirim Telegram
+                                </button>
+                            </div>
+                            <div id="wrpm-tele-test-status" style="font-size: 13px; font-weight: 600;"></div>
                         </div>
                     </div>
                 </div>
@@ -100,23 +123,23 @@
                         <div class="wrpm-form-grid wrpm-mt-1">
                             <div class="wrpm-form-group">
                                 <label class="wrpm-label">SMTP Host</label>
-                                <input type="text" name="smtp_host" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['smtp_host']) ? $settings['smtp_host'] : ''); ?>" />
+                                <input type="text" name="smtp_host" id="wrpm-smtp-host" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['smtp_host']) ? $settings['smtp_host'] : ''); ?>" />
                             </div>
                             <div class="wrpm-form-group">
                                 <label class="wrpm-label">SMTP Port</label>
-                                <input type="number" name="smtp_port" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['smtp_port']) ? $settings['smtp_port'] : '587'); ?>" />
+                                <input type="number" name="smtp_port" id="wrpm-smtp-port" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['smtp_port']) ? $settings['smtp_port'] : '587'); ?>" />
                             </div>
                             <div class="wrpm-form-group">
                                 <label class="wrpm-label">SMTP Username</label>
-                                <input type="text" name="smtp_user" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['smtp_user']) ? $settings['smtp_user'] : ''); ?>" />
+                                <input type="text" name="smtp_user" id="wrpm-smtp-user" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['smtp_user']) ? $settings['smtp_user'] : ''); ?>" />
                             </div>
                             <div class="wrpm-form-group">
                                 <label class="wrpm-label">SMTP Password</label>
-                                <input type="password" name="smtp_pass" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['smtp_pass']) ? $settings['smtp_pass'] : ''); ?>" />
+                                <input type="password" name="smtp_pass" id="wrpm-smtp-pass" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['smtp_pass']) ? $settings['smtp_pass'] : ''); ?>" />
                             </div>
                             <div class="wrpm-form-group">
                                 <label class="wrpm-label">SMTP Secure</label>
-                                <select name="smtp_secure" class="wrpm-select">
+                                <select name="smtp_secure" id="wrpm-smtp-secure" class="wrpm-select">
                                     <option value="tls" <?php echo !empty($settings['smtp_secure']) && $settings['smtp_secure'] === 'tls' ? 'selected' : ''; ?>>TLS (Rekomendasi)</option>
                                     <option value="ssl" <?php echo !empty($settings['smtp_secure']) && $settings['smtp_secure'] === 'ssl' ? 'selected' : ''; ?>>SSL</option>
                                     <option value="none" <?php echo !empty($settings['smtp_secure']) && $settings['smtp_secure'] === 'none' ? 'selected' : ''; ?>>None</option>
@@ -124,12 +147,22 @@
                             </div>
                             <div class="wrpm-form-group">
                                 <label class="wrpm-label">Sender Email (From)</label>
-                                <input type="email" name="smtp_from_email" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['smtp_from_email']) ? $settings['smtp_from_email'] : ''); ?>" />
+                                <input type="email" name="smtp_from_email" id="wrpm-smtp-from-email" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['smtp_from_email']) ? $settings['smtp_from_email'] : ''); ?>" />
                             </div>
                             <div class="wrpm-form-group">
                                 <label class="wrpm-label">Sender Name</label>
-                                <input type="text" name="smtp_from_name" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['smtp_from_name']) ? $settings['smtp_from_name'] : ''); ?>" />
+                                <input type="text" name="smtp_from_name" id="wrpm-smtp-from-name" class="wrpm-input" value="<?php echo esc_attr(!empty($settings['smtp_from_name']) ? $settings['smtp_from_name'] : ''); ?>" />
                             </div>
+                        </div>
+                        
+                        <!-- Test Connection Row -->
+                        <div class="wrpm-mt-2" style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                            <div>
+                                <button type="button" id="wrpm-btn-test-smtp" class="wrpm-btn wrpm-btn-secondary" style="height: 35px; padding: 0 15px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center;">
+                                    <span class="dashicons dashicons-email" style="margin-right: 5px; font-size: 16px; width: 16px; height: 16px;"></span> Test Kirim Email SMTP (Ke Sender Email)
+                                </button>
+                            </div>
+                            <div id="wrpm-smtp-test-status" style="font-size: 13px; font-weight: 600;"></div>
                         </div>
                     </div>
                 </div>
@@ -389,6 +422,97 @@ jQuery(document).ready(function($) {
                     'background': origBg
                 }).attr('title', 'Klik untuk menyalin');
             }, 1000);
+        });
+    });
+
+    // Test WAHA Gateway
+    $('#wrpm-btn-test-waha').on('click', function(e) {
+        e.preventDefault();
+        var $btn = $(this);
+        var $status = $('#wrpm-waha-test-status');
+        var phone = $('#wrpm-waha-test-phone').val().trim();
+        
+        if (!phone) {
+            $status.css('color', '#ef4444').text('Nomor HP wajib diisi untuk tes!');
+            return;
+        }
+
+        $btn.prop('disabled', true).text('Mengirim...');
+        $status.css('color', '#4b5563').text('Menghubungkan ke WAHA...');
+
+        $.post(ajaxurl, {
+            action: 'wrpm_test_waha',
+            waha_api_url: $('#wrpm-waha-url').val(),
+            waha_api_token: $('#wrpm-waha-token').val(),
+            waha_session_name: $('#wrpm-waha-session').val(),
+            target_phone: phone
+        }, function(resp) {
+            $btn.prop('disabled', false).html('<span class="dashicons dashicons-phone" style="margin-right: 5px; font-size: 16px; width: 16px; height: 16px;"></span> Test Kirim WA');
+            if (resp.success) {
+                $status.css('color', '#10b981').text(resp.data.message);
+            } else {
+                $status.css('color', '#ef4444').text(resp.data.message);
+            }
+        }).fail(function() {
+            $btn.prop('disabled', false).html('<span class="dashicons dashicons-phone" style="margin-right: 5px; font-size: 16px; width: 16px; height: 16px;"></span> Test Kirim WA');
+            $status.css('color', '#ef4444').text('Terjadi error jaringan atau server.');
+        });
+    });
+
+    // Test Telegram Bot
+    $('#wrpm-btn-test-telegram').on('click', function(e) {
+        e.preventDefault();
+        var $btn = $(this);
+        var $status = $('#wrpm-tele-test-status');
+        
+        $btn.prop('disabled', true).text('Mengirim...');
+        $status.css('color', '#4b5563').text('Menghubungkan ke Telegram...');
+
+        $.post(ajaxurl, {
+            action: 'wrpm_test_telegram',
+            telegram_bot_token: $('#wrpm-tele-token').val(),
+            telegram_default_chat_id: $('#wrpm-tele-chatid').val()
+        }, function(resp) {
+            $btn.prop('disabled', false).html('<span class="dashicons dashicons-megaphone" style="margin-right: 5px; font-size: 16px; width: 16px; height: 16px;"></span> Test Kirim Telegram');
+            if (resp.success) {
+                $status.css('color', '#10b981').text(resp.data.message);
+            } else {
+                $status.css('color', '#ef4444').text(resp.data.message);
+            }
+        }).fail(function() {
+            $btn.prop('disabled', false).html('<span class="dashicons dashicons-megaphone" style="margin-right: 5px; font-size: 16px; width: 16px; height: 16px;"></span> Test Kirim Telegram');
+            $status.css('color', '#ef4444').text('Terjadi error jaringan atau server.');
+        });
+    });
+
+    // Test SMTP Email
+    $('#wrpm-btn-test-smtp').on('click', function(e) {
+        e.preventDefault();
+        var $btn = $(this);
+        var $status = $('#wrpm-smtp-test-status');
+        
+        $btn.prop('disabled', true).text('Mengirim...');
+        $status.css('color', '#4b5563').text('Mengirim email uji coba...');
+
+        $.post(ajaxurl, {
+            action: 'wrpm_test_smtp',
+            smtp_host: $('#wrpm-smtp-host').val(),
+            smtp_port: $('#wrpm-smtp-port').val(),
+            smtp_user: $('#wrpm-smtp-user').val(),
+            smtp_pass: $('#wrpm-smtp-pass').val(),
+            smtp_secure: $('#wrpm-smtp-secure').val(),
+            smtp_from_email: $('#wrpm-smtp-from-email').val(),
+            smtp_from_name: $('#wrpm-smtp-from-name').val()
+        }, function(resp) {
+            $btn.prop('disabled', false).html('<span class="dashicons dashicons-email" style="margin-right: 5px; font-size: 16px; width: 16px; height: 16px;"></span> Test Kirim Email SMTP (Ke Sender Email)');
+            if (resp.success) {
+                $status.css('color', '#10b981').text(resp.data.message);
+            } else {
+                $status.css('color', '#ef4444').text(resp.data.message);
+            }
+        }).fail(function() {
+            $btn.prop('disabled', false).html('<span class="dashicons dashicons-email" style="margin-right: 5px; font-size: 16px; width: 16px; height: 16px;"></span> Test Kirim Email SMTP (Ke Sender Email)');
+            $status.css('color', '#ef4444').text('Terjadi error jaringan atau server.');
         });
     });
 });

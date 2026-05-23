@@ -27,9 +27,12 @@ class WRPM_Admin {
         // Manual reminder triggers
         add_action('admin_post_wrpm_send_reminder_manual', [$this, 'send_reminder_manual']);
 
-        // AJAX hooks for quick add
+        // AJAX hooks for quick add and connection testing
         add_action('wp_ajax_wrpm_quick_add_seller', [$this, 'quick_add_seller']);
         add_action('wp_ajax_wrpm_quick_add_customer', [$this, 'quick_add_customer']);
+        add_action('wp_ajax_wrpm_test_waha', [$this, 'ajax_test_waha']);
+        add_action('wp_ajax_wrpm_test_telegram', [$this, 'ajax_test_telegram']);
+        add_action('wp_ajax_wrpm_test_smtp', [$this, 'ajax_test_smtp']);
     }
 
     public function register_menus() {
@@ -1018,6 +1021,155 @@ class WRPM_Admin {
             ]);
         } else {
             wp_send_json_error(['message' => 'Gagal menyimpan data Customer ke database.']);
+        }
+     }
+
+    public function ajax_test_waha() {
+        if (!current_user_can('wrpm_manage')) {
+            wp_send_json_error(['message' => 'Forbidden']);
+        }
+
+        $api_url = !empty($_POST['waha_api_url']) ? esc_url_raw($_POST['waha_api_url']) : '';
+        $token = !empty($_POST['waha_api_token']) ? sanitize_text_field($_POST['waha_api_token']) : '';
+        $session = !empty($_POST['waha_session_name']) ? sanitize_text_field($_POST['waha_session_name']) : 'default';
+        $target = !empty($_POST['target_phone']) ? sanitize_text_field($_POST['target_phone']) : '';
+
+        if (!$api_url) {
+            wp_send_json_error(['message' => 'API URL WAHA tidak boleh kosong.']);
+        }
+        if (!$target) {
+            wp_send_json_error(['message' => 'Nomor HP tujuan pengetesan wajib diisi.']);
+        }
+
+        // Clean & internationalize phone
+        $target = preg_replace('/[^0-9]/', '', $target);
+        if (strpos($target, '0') === 0) {
+            $target = '62' . substr($target, 1);
+        }
+        if (strpos($target, '@') === false) {
+            $target .= '@c.us';
+        }
+
+        $url = rtrim($api_url, '/') . '/api/sendText';
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ];
+        if ($token) {
+            $headers['Authorization'] = 'Bearer ' . $token;
+        }
+
+        $message = "Halo! Ini adalah pesan uji coba dari WP Reseller Manage Anda. Koneksi berhasil! 🚀";
+
+        $resp = wp_remote_post($url, [
+            'timeout' => 20,
+            'headers' => $headers,
+            'body' => wp_json_encode([
+                'session' => $session,
+                'chatId' => $target,
+                'text' => $message,
+            ]),
+        ]);
+
+        if (is_wp_error($resp)) {
+            wp_send_json_error(['message' => 'Error: ' . $resp->get_error_message()]);
+        }
+
+        $code = (int)wp_remote_retrieve_response_code($resp);
+        if ($code < 200 || $code >= 300) {
+            wp_send_json_error(['message' => "Gagal dengan HTTP Status Code " . $code . ". Silakan periksa kembali URL, Session, atau Token API Anda."]);
+        }
+
+        wp_send_json_success(['message' => 'Pesan uji coba berhasil terkirim via WAHA!']);
+    }
+
+    public function ajax_test_telegram() {
+        if (!current_user_can('wrpm_manage')) {
+            wp_send_json_error(['message' => 'Forbidden']);
+        }
+
+        $token = !empty($_POST['telegram_bot_token']) ? sanitize_text_field($_POST['telegram_bot_token']) : '';
+        $chat_id = !empty($_POST['telegram_default_chat_id']) ? sanitize_text_field($_POST['telegram_default_chat_id']) : '';
+
+        if (!$token) {
+            wp_send_json_error(['message' => 'Bot Token Telegram tidak boleh kosong.']);
+        }
+        if (!$chat_id) {
+            wp_send_json_error(['message' => 'Chat ID Telegram tidak boleh kosong.']);
+        }
+
+        $url = 'https://api.telegram.org/bot' . rawurlencode($token) . '/sendMessage';
+        $message = "Halo! Ini adalah pesan uji coba dari WP Reseller Manage Anda. Koneksi berhasil! 🚀";
+
+        $resp = wp_remote_post($url, [
+            'timeout' => 15,
+            'headers' => ['Content-Type' => 'application/json'],
+            'body' => wp_json_encode([
+                'chat_id' => $chat_id,
+                'text' => $message,
+                'parse_mode' => 'HTML',
+                'disable_web_page_preview' => true,
+            ]),
+        ]);
+
+        if (is_wp_error($resp)) {
+            wp_send_json_error(['message' => 'Error: ' . $resp->get_error_message()]);
+        }
+
+        $code = (int)wp_remote_retrieve_response_code($resp);
+        if ($code < 200 || $code >= 300) {
+            wp_send_json_error(['message' => "Gagal dengan HTTP Status Code " . $code . ". Silakan periksa kembali Bot Token atau Chat ID Anda."]);
+        }
+
+        wp_send_json_success(['message' => 'Pesan uji coba berhasil terkirim via Telegram!']);
+    }
+
+    public function ajax_test_smtp() {
+        if (!current_user_can('wrpm_manage')) {
+            wp_send_json_error(['message' => 'Forbidden']);
+        }
+
+        $host = !empty($_POST['smtp_host']) ? sanitize_text_field($_POST['smtp_host']) : '';
+        $port = !empty($_POST['smtp_port']) ? (int)$_POST['smtp_port'] : 587;
+        $user = !empty($_POST['smtp_user']) ? sanitize_text_field($_POST['smtp_user']) : '';
+        $pass = !empty($_POST['smtp_pass']) ? sanitize_text_field($_POST['smtp_pass']) : '';
+        $secure = !empty($_POST['smtp_secure']) ? sanitize_text_field($_POST['smtp_secure']) : 'tls';
+        $from_email = !empty($_POST['smtp_from_email']) ? sanitize_email($_POST['smtp_from_email']) : '';
+        $from_name = !empty($_POST['smtp_from_name']) ? sanitize_text_field($_POST['smtp_from_name']) : '';
+
+        if (!$host || !$user || !$pass || !$from_email) {
+            wp_send_json_error(['message' => 'Host, Username, Password, dan Sender Email wajib diisi untuk pengetesan.']);
+        }
+
+        // We temporarily intercept PHPMailer or run a direct custom send logic
+        // Using WP's mailer directly with custom phpmailer hook
+        $temp_hook = function($phpmailer) use ($host, $port, $user, $pass, $secure, $from_email, $from_name) {
+            $phpmailer->isSMTP();
+            $phpmailer->Host = $host;
+            $phpmailer->SMTPAuth = true;
+            $phpmailer->Port = $port;
+            $phpmailer->Username = $user;
+            $phpmailer->Password = $pass;
+            if ($secure === 'ssl' || $secure === 'tls') {
+                $phpmailer->SMTPSecure = $secure;
+            }
+            $phpmailer->setFrom($from_email, $from_name ?: get_bloginfo('name'));
+        };
+
+        add_action('phpmailer_init', $temp_hook, 999);
+        
+        $subject = 'WP Reseller Manage - Test SMTP Connection';
+        $body = "Halo!\n\nIni adalah email uji coba untuk memverifikasi pengaturan SMTP Anda pada plugin WP Reseller Manage.\n\nKoneksi SMTP Anda berhasil terintegrasi dengan sempurna! 🚀";
+        $headers = ['Content-Type: text/plain; charset=UTF-8'];
+
+        $ok = wp_mail($from_email, $subject, $body, $headers);
+        
+        remove_action('phpmailer_init', $temp_hook, 999);
+
+        if ($ok) {
+            wp_send_json_success(['message' => 'Email uji coba berhasil terkirim ke ' . $from_email . '! Koneksi SMTP sukses.']);
+        } else {
+            wp_send_json_error(['message' => 'Gagal mengirim email uji coba. Silakan periksa kembali konfigurasi detail SMTP Anda atau log server.']);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Plugin Name: OKJualin
  * Description: Manajemen reseller premium: master harga, reseller product, customer, active product tracker, automated reminders (email/telegram/whatsapp WAHA), brandable PDF invoice customizer, JSON backup & ECharts analytics dashboard.
@@ -93,8 +93,12 @@ class OKJ_App {
     }
 
     public function maybe_upgrade_db() {
+        global $wpdb;
+        $t_customers = OKJ_DB::get_table('customers');
+        $table_exists = $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $t_customers)) === $t_customers;
+
         $db_ver = get_option('okj_db_version', '');
-        if ($db_ver !== self::VERSION) {
+        if ($db_ver !== self::VERSION || !$table_exists) {
             OKJ_DB::install();
             update_option('okj_db_version', self::VERSION);
         }

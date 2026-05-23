@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WP Reseller Manage
  * Description: Manajemen produk reseller: master harga, produk reseller, customer, produk aktif, reminder (email/telegram), invoice PDF, logs & laporan.
- * Version: 0.1.15
+ * Version: 0.0.8
  * Author: HONET
  * License: GPLv2 or later
  * Text Domain: wp-reseller-product-manager
@@ -21,7 +21,7 @@ if (!defined('WRPM_PLUGIN_URL')) {
 require_once __DIR__ . '/includes/bootstrap.php';
 
 final class WRPM_App {
-    const VERSION = '0.1.15';
+    const VERSION = '0.0.8';
 
     const OPT_DB_VERSION = 'wrpm_db_version';
 
@@ -139,7 +139,7 @@ final class WRPM_App {
 
         add_menu_page(
             self::PLUGIN_SHORT_NAME,
-            'WP Reseller',
+            'WP Reseller Manage',
             $cap,
             'wrpm-dashboard',
             [$this, 'page_dashboard'],

@@ -106,13 +106,12 @@
                         <div class="wrpm-form-group">
                             <label class="wrpm-label">Link Affiliate / Referral (Opsional)</label>
                             <input type="url" name="affiliate_url" class="wrpm-input" value="<?php echo $row ? esc_url($row['affiliate_url']) : ''; ?>" placeholder="https://domain.com/ref?id=123" />
-                        </div>
-
-                        <div class="wrpm-form-group" style="display: flex; align-items: center; padding-top: 25px;">
-                            <label class="wrpm-label" style="display: flex; align-items: center; font-weight: 500; cursor: pointer; margin-bottom: 0;">
-                                <input type="checkbox" name="auto_create_shortlink" value="1" style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;" checked />
-                                Buat/Perbarui Shortlink Otomatis
-                            </label>
+                            <div style="margin-top: 8px; display: flex; align-items: center;">
+                                <label class="wrpm-label" style="display: flex; align-items: center; font-weight: 500; cursor: pointer; margin-bottom: 0; font-size: 13px; color: #475569;">
+                                    <input type="checkbox" name="auto_create_shortlink" value="1" style="margin-right: 8px; width: 16px; height: 16px; cursor: pointer;" checked />
+                                    Buat/Perbarui Shortlink Otomatis
+                                </label>
+                            </div>
                         </div>
                     </div>
 

@@ -137,6 +137,7 @@ class WRPM_Notifier {
         $token = trim((string)($this->settings['waha_api_token'] ?? ''));
         if ($token) {
             $headers['Authorization'] = 'Bearer ' . $token;
+            $headers['X-Api-Key'] = $token;
         }
 
         $resp = wp_remote_post($url, [

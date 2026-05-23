@@ -1057,6 +1057,7 @@ class WRPM_Admin {
         ];
         if ($token) {
             $headers['Authorization'] = 'Bearer ' . $token;
+            $headers['X-Api-Key'] = $token;
         }
 
         $message = "Halo! Ini adalah pesan uji coba dari WP Reseller Manage Anda. Koneksi berhasil! 🚀";

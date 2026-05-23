@@ -396,6 +396,8 @@ class WRPM_Admin {
 
         $product_name = $price_row ? $price_row['name'] : '';
         $duration_days = isset($_POST['duration_days']) ? (int)$_POST['duration_days'] : ($price_row ? (int)$price_row['duration_days'] : 0);
+        $purchase_date = sanitize_text_field($_POST['purchase_date']);
+        $expires_at = wp_date('Y-m-d', strtotime($purchase_date . " +{$duration_days} days"));
 
         $data = [
             'id' => $id,
@@ -406,11 +408,11 @@ class WRPM_Admin {
             'seller_id' => !empty($_POST['seller_id']) ? sanitize_text_field($_POST['seller_id']) : null,
             'reseller_name' => sanitize_text_field($_POST['reseller_name']),
             'reseller_contact' => sanitize_text_field($_POST['reseller_contact']),
-            'purchase_date' => sanitize_text_field($_POST['purchase_date']),
+            'purchase_date' => $purchase_date,
             'duration_days' => $duration_days,
             'description' => wp_kses_post($_POST['description']),
             'price' => (float)$_POST['price'],
-            'expires_at' => sanitize_text_field($_POST['expires_at']),
+            'expires_at' => $expires_at,
             'payment_status' => sanitize_text_field($_POST['payment_status']),
             'notes' => wp_kses_post($_POST['notes']),
             'updated_at' => current_time('mysql'),

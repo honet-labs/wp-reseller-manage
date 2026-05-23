@@ -45,6 +45,7 @@ jQuery(document).ready(function($) {
         var purchaseDateStr = $('input[name="purchase_date"]').val();
         var duration = parseInt($('input[name="duration_days"]').val());
         if (purchaseDateStr && !isNaN(duration) && duration >= 0) {
+            purchaseDateStr = purchaseDateStr.replace(/\//g, '-');
             var parts = purchaseDateStr.split('-');
             if (parts.length === 3) {
                 var year = parseInt(parts[0], 10);

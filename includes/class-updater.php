@@ -18,7 +18,25 @@ class WRPM_Updater {
         if ($this->repo) {
             add_filter('pre_set_site_transient_update_plugins', [$this, 'check_update']);
             add_filter('plugins_api', [$this, 'plugin_info'], 20, 3);
+            add_filter('upgrader_source_selection', [$this, 'upgrader_source_selection'], 10, 4);
         }
+    }
+
+    public function upgrader_source_selection($source, $remote_source, $upgrader, $hook_extra = null) {
+        if (empty($hook_extra['plugin']) || $hook_extra['plugin'] !== $this->slug) {
+            return $source;
+        }
+
+        global $wp_filesystem;
+        $plugin_dir = dirname($this->slug);
+        $corrected_source = trailingslashit(dirname($source)) . $plugin_dir;
+
+        // Move and rename the GitHub extracted folder to match active plugin folder name
+        if ($wp_filesystem && $wp_filesystem->move($source, $corrected_source, true)) {
+            return trailingslashit($corrected_source);
+        }
+
+        return $source;
     }
 
     public function check_update($transient) {

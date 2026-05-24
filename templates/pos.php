@@ -163,6 +163,15 @@ $qr_url = home_url('/?okj_order=1');
                             </div>
                         </div>
 
+                        <div class="okj-form-group" style="margin-top: 12px; margin-bottom: 12px;">
+                            <label class="okj-label" style="font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px; display: block; text-transform: uppercase; letter-spacing: 0.5px;">Status Awal Transaksi</label>
+                            <select id="okj-pos-initial-status" class="okj-input" style="font-size: 12px; padding: 6px 10px; width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; font-weight: 600; color: #1e293b;">
+                                <option value="paid" style="font-weight:700; color:#15803d;">Selesai & Lunas</option>
+                                <option value="pending" style="font-weight:700; color:#ea580c;">Menunggu Konfirmasi (Pending)</option>
+                                <option value="processing" style="font-weight:700; color:#4f46e5;">Sedang Diproses</option>
+                            </select>
+                        </div>
+
                         <div class="okj-form-group" style="margin-top: 12px; margin-bottom: 16px;">
                             <textarea id="okj-pos-notes" class="okj-input" placeholder="Catatan transaksi internal (opsional)..." rows="2" style="font-size: 12px; padding: 6px 10px;"></textarea>
                         </div>
@@ -478,6 +487,7 @@ jQuery(document).ready(function($) {
         $('#okj-pos-customer-select').val('').trigger('change');
         $('#okj-pos-seller-select').val('').trigger('change');
         $('#okj-summary-discount').val(0);
+        $('#okj-pos-initial-status').val('paid');
         $('#okj-pos-notes').val('');
     });
 
@@ -765,6 +775,7 @@ jQuery(document).ready(function($) {
                 discount: discount,
                 notes: notes,
                 payment_method: paymentMethod,
+                payment_status: $('#okj-pos-initial-status').val(),
                 items: cart
             }),
             success: function(rawResponse) {

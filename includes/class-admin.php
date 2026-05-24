@@ -1334,6 +1334,7 @@ class OKJ_Admin {
         $discount = (float)$payload['discount'];
         $notes = sanitize_textarea_field($payload['notes']);
         $payment_method = sanitize_text_field($payload['payment_method']);
+        $payment_status = !empty($payload['payment_status']) ? sanitize_text_field($payload['payment_status']) : 'paid';
 
         // Fetch customer details
         $customer_name = 'Guest';
@@ -1407,7 +1408,7 @@ class OKJ_Admin {
             'tax' => 0,
             'total' => $total,
             'payment_method' => $payment_method,
-            'payment_status' => 'paid',
+            'payment_status' => $payment_status,
             'notes' => $notes,
             'created_at' => current_time('mysql'),
             'updated_at' => current_time('mysql'),
@@ -1446,7 +1447,7 @@ class OKJ_Admin {
                     'expires_at' => $expires_at,
                     'status' => 'active',
                     'price' => $entry['price'] * $entry['qty'],
-                    'payment_status' => 'paid',
+                    'payment_status' => $payment_status,
                     'notes' => 'Pembelian via POS (' . $transaction_no . ')',
                     'created_at' => current_time('mysql'),
                     'updated_at' => current_time('mysql'),

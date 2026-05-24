@@ -20,7 +20,21 @@
                 <?php wp_nonce_field('okj_save_settings'); ?>
                 <input type="hidden" name="action" value="okj_save_settings" />
 
-                <!-- General Reminder Offsets -->
+                <!-- NAVIGATION TABS -->
+                <div class="okj-tabs-wrapper" style="margin-bottom: 25px; border-bottom: 2px solid #e2e8f0;">
+                    <ul class="okj-tabs-nav" style="display: flex; gap: 24px; list-style: none; margin: 0; padding: 0;">
+                        <li class="okj-tab-item active" data-tab="global" style="padding-bottom: 12px; margin-bottom: -2px; font-weight: 700; font-size: 15px; color: #4f46e5; border-bottom: 3px solid #4f46e5; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;">
+                            <span class="dashicons dashicons-admin-generic" style="font-size: 18px; width: 18px; height: 18px;"></span> Pengaturan Global & Integrasi
+                        </li>
+                        <li class="okj-tab-item" data-tab="pos" style="padding-bottom: 12px; margin-bottom: -2px; font-weight: 600; font-size: 15px; color: #64748b; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;">
+                            <span class="dashicons dashicons-calculator" style="font-size: 18px; width: 18px; height: 18px;"></span> Pengaturan Mesin Kasir POS
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- TAB 1: GLOBAL SETTINGS -->
+                <div class="okj-tab-content" id="okj-tab-global-content">
+                    <!-- General Reminder Offsets -->
                 <div class="okj-card">
                     <div class="okj-card-header">
                         <h2>Sistem Otomasi & Milestones</h2>
@@ -390,6 +404,28 @@
 
 <script>
 jQuery(document).ready(function($) {
+    // Tabs Navigation Switcher
+    $('.okj-tab-item').on('click', function() {
+        var targetTab = $(this).data('tab');
+        
+        // Active nav state
+        $('.okj-tab-item').removeClass('active').css({
+            'color': '#64748b',
+            'border-bottom-color': 'transparent',
+            'font-weight': '600'
+        });
+        
+        $(this).addClass('active').css({
+            'color': '#4f46e5',
+            'border-bottom-color': '#4f46e5',
+            'font-weight': '700'
+        });
+        
+        // Active content state
+        $('.okj-tab-content').hide();
+        $('#okj-tab-' + targetTab + '-content').fadeIn(200);
+    });
+
     // Show Modal
     $('#okj-btn-show-shortcodes').on('click', function(e) {
         e.preventDefault();
@@ -583,7 +619,55 @@ jQuery(document).ready(function($) {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> <!-- End #okj-tab-global-content -->
+
+                <!-- TAB 2: POS SETTINGS -->
+                <div class="okj-tab-content" id="okj-tab-pos-content" style="display: none;">
+                    <!-- POS Specific Settings Card -->
+                    <div class="okj-card">
+                        <div class="okj-card-header">
+                            <h2>Metode Pembayaran Mesin Kasir POS</h2>
+                        </div>
+                        <div class="okj-card-body">
+                            <p class="okj-text-muted" style="margin-bottom: 20px;">Pilih metode pembayaran apa saja yang ingin Anda aktifkan saat kasir melakukan checkout pesanan di aplikasi POS.</p>
+                            
+                            <div class="okj-form-group" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                                <!-- Cash/Tunai -->
+                                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 15px; display: flex; align-items: flex-start; gap: 12px; transition: all 0.2s;">
+                                    <input type="checkbox" name="pos_enable_cash" value="1" <?php checked(!isset($settings['pos_enable_cash']) || $settings['pos_enable_cash'] == 1, 1); ?> style="width: 20px; height: 20px; margin-top: 2px; cursor: pointer;" />
+                                    <div>
+                                        <label style="font-weight: 700; color: #1e293b; display: block; margin-bottom: 4px; font-size: 14px; cursor: pointer;">
+                                            <span class="dashicons dashicons-money" style="color: #10b981; font-size: 18px; width: 18px; height: 18px; vertical-align: text-bottom; margin-right: 4px;"></span> Cash / Tunai
+                                        </label>
+                                        <small class="okj-text-muted" style="font-size: 11px;">Menerima pembayaran tunai langsung di toko/kasir.</small>
+                                    </div>
+                                </div>
+
+                                <!-- Transfer Bank -->
+                                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 15px; display: flex; align-items: flex-start; gap: 12px; transition: all 0.2s;">
+                                    <input type="checkbox" name="pos_enable_transfer" value="1" <?php checked(!isset($settings['pos_enable_transfer']) || $settings['pos_enable_transfer'] == 1, 1); ?> style="width: 20px; height: 20px; margin-top: 2px; cursor: pointer;" />
+                                    <div>
+                                        <label style="font-weight: 700; color: #1e293b; display: block; margin-bottom: 4px; font-size: 14px; cursor: pointer;">
+                                            <span class="dashicons dashicons-bank" style="color: #3b82f6; font-size: 18px; width: 18px; height: 18px; vertical-align: text-bottom; margin-right: 4px;"></span> Transfer Bank
+                                        </label>
+                                        <small class="okj-text-muted" style="font-size: 11px;">Menerima pembayaran transfer bank manual.</small>
+                                    </div>
+                                </div>
+
+                                <!-- QRIS / E-Wallet -->
+                                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 15px; display: flex; align-items: flex-start; gap: 12px; transition: all 0.2s;">
+                                    <input type="checkbox" name="pos_enable_qris" value="1" <?php checked(!isset($settings['pos_enable_qris']) || $settings['pos_enable_qris'] == 1, 1); ?> style="width: 20px; height: 20px; margin-top: 2px; cursor: pointer;" />
+                                    <div>
+                                        <label style="font-weight: 700; color: #1e293b; display: block; margin-bottom: 4px; font-size: 14px; cursor: pointer;">
+                                            <span class="dashicons dashicons-smartphone" style="color: #a855f7; font-size: 18px; width: 18px; height: 18px; vertical-align: text-bottom; margin-right: 4px;"></span> QRIS / E-Wallet
+                                        </label>
+                                        <small class="okj-text-muted" style="font-size: 11px;">Menerima scan barcode QRIS dan e-wallet digital.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- End #okj-tab-pos-content -->
 
                 <div class="okj-form-actions okj-mt-2">
                     <button type="submit" class="okj-btn okj-btn-primary">Simpan Semua Pengaturan</button>

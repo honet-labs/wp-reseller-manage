@@ -147,19 +147,41 @@ $qr_url = home_url('/?okj_order=1');
 
                         <div class="okj-pos-payment-selector">
                             <label class="okj-label" style="font-size: 13px; margin-bottom: 8px; display: block;">Metode Pembayaran</label>
+                            <?php
+                            $settings = get_option('okj_settings_v1', []);
+                            $pos_enable_cash = isset($settings['pos_enable_cash']) ? (int)$settings['pos_enable_cash'] : 1;
+                            $pos_enable_transfer = isset($settings['pos_enable_transfer']) ? (int)$settings['pos_enable_transfer'] : 1;
+                            $pos_enable_qris = isset($settings['pos_enable_qris']) ? (int)$settings['pos_enable_qris'] : 1;
+
+                            // Fallback to enabling Cash if all disabled
+                            if (!$pos_enable_cash && !$pos_enable_transfer && !$pos_enable_qris) {
+                                $pos_enable_cash = 1;
+                            }
+
+                            $first_active = '';
+                            if ($pos_enable_cash) { $first_active = 'cash'; }
+                            elseif ($pos_enable_transfer) { $first_active = 'transfer'; }
+                            elseif ($pos_enable_qris) { $first_active = 'qris'; }
+                            ?>
                             <div class="okj-pos-payment-options">
-                                <label class="okj-pos-pay-opt active" data-method="cash">
-                                    <input type="radio" name="payment_method" value="cash" checked style="display:none;" />
+                                <?php if ($pos_enable_cash): ?>
+                                <label class="okj-pos-pay-opt <?php echo $first_active === 'cash' ? 'active' : ''; ?>" data-method="cash">
+                                    <input type="radio" name="payment_method" value="cash" <?php checked($first_active, 'cash'); ?> style="display:none;" />
                                     <span class="dashicons dashicons-money"></span> Cash/Tunai
                                 </label>
-                                <label class="okj-pos-pay-opt" data-method="transfer">
-                                    <input type="radio" name="payment_method" value="transfer" style="display:none;" />
+                                <?php endif; ?>
+                                <?php if ($pos_enable_transfer): ?>
+                                <label class="okj-pos-pay-opt <?php echo $first_active === 'transfer' ? 'active' : ''; ?>" data-method="transfer">
+                                    <input type="radio" name="payment_method" value="transfer" <?php checked($first_active, 'transfer'); ?> style="display:none;" />
                                     <span class="dashicons dashicons-bank"></span> Transfer
                                 </label>
-                                <label class="okj-pos-pay-opt" data-method="qris">
-                                    <input type="radio" name="payment_method" value="qris" style="display:none;" />
+                                <?php endif; ?>
+                                <?php if ($pos_enable_qris): ?>
+                                <label class="okj-pos-pay-opt <?php echo $first_active === 'qris' ? 'active' : ''; ?>" data-method="qris">
+                                    <input type="radio" name="payment_method" value="qris" <?php checked($first_active, 'qris'); ?> style="display:none;" />
                                     <span class="dashicons dashicons-smartphone"></span> QRIS/E-Wallet
                                 </label>
+                                <?php endif; ?>
                             </div>
                         </div>
 

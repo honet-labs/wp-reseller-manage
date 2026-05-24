@@ -885,6 +885,9 @@ class OKJ_Admin {
             'pdf_primary_color' => sanitize_text_field($_POST['pdf_primary_color']),
             'github_repo' => sanitize_text_field($_POST['github_repo']),
             'github_token' => sanitize_text_field($_POST['github_token']),
+            'pos_enable_cash' => !empty($_POST['pos_enable_cash']) ? 1 : 0,
+            'pos_enable_transfer' => !empty($_POST['pos_enable_transfer']) ? 1 : 0,
+            'pos_enable_qris' => !empty($_POST['pos_enable_qris']) ? 1 : 0,
         ];
 
         update_option('okj_settings_v1', $data);

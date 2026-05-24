@@ -669,9 +669,25 @@ $wa_confirm_no = !empty($settings['waha_sender_number']) ? $settings['waha_sende
                     <div class="okj-client-form-group">
                         <label class="okj-client-label">Metode Pembayaran</label>
                         <select id="okj-cust-pay-method" class="okj-client-input" style="cursor: pointer;">
-                            <option value="qris">QRIS / E-Wallet (Bayar Instan)</option>
-                            <option value="transfer">Transfer Bank Manual</option>
-                            <option value="cash">Bayar Kasir / Tunai</option>
+                            <?php
+                            $pos_enable_cash = isset($settings['pos_enable_cash']) ? (int)$settings['pos_enable_cash'] : 1;
+                            $pos_enable_transfer = isset($settings['pos_enable_transfer']) ? (int)$settings['pos_enable_transfer'] : 1;
+                            $pos_enable_qris = isset($settings['pos_enable_qris']) ? (int)$settings['pos_enable_qris'] : 1;
+
+                            // Fallback to cash if all disabled
+                            if (!$pos_enable_cash && !$pos_enable_transfer && !$pos_enable_qris) {
+                                $pos_enable_cash = 1;
+                            }
+                            ?>
+                            <?php if ($pos_enable_qris): ?>
+                                <option value="qris">QRIS / E-Wallet (Bayar Instan)</option>
+                            <?php endif; ?>
+                            <?php if ($pos_enable_transfer): ?>
+                                <option value="transfer">Transfer Bank Manual</option>
+                            <?php endif; ?>
+                            <?php if ($pos_enable_cash): ?>
+                                <option value="cash">Bayar Kasir / Tunai</option>
+                            <?php endif; ?>
                         </select>
                     </div>
 

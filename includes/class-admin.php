@@ -56,7 +56,7 @@ class OKJ_Admin {
             $cap,
             'okj-dashboard',
             [$this, 'view_dashboard'],
-            'dashicons-blank',
+            'dashicons-store',
             58
         );
 

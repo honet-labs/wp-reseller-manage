@@ -389,6 +389,7 @@ $qr_url = home_url('/?okj_order=1');
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
+    const safeAjaxUrl = typeof ajaxurl !== 'undefined' ? ajaxurl.replace(/^http:/i, window.location.protocol) : '/wp-admin/admin-ajax.php';
     let cart = [];
 
     // Tab Navigation controller
@@ -437,7 +438,7 @@ jQuery(document).ready(function($) {
         select.css({'color': color, 'background': bg});
 
         $.ajax({
-            url: ajaxurl,
+            url: safeAjaxUrl,
             type: 'POST',
             data: {
                 action: 'okj_pos_update_status',
@@ -491,7 +492,7 @@ jQuery(document).ready(function($) {
         btn.prop('disabled', true).addClass('okj-btn-loading');
 
         $.ajax({
-            url: ajaxurl,
+            url: safeAjaxUrl,
             type: 'POST',
             data: {
                 action: 'okj_quick_add_customer',
@@ -534,7 +535,7 @@ jQuery(document).ready(function($) {
         `);
 
         $.ajax({
-            url: ajaxurl,
+            url: safeAjaxUrl,
             type: 'GET',
             data: {
                 action: 'okj_pos_get_products',
@@ -726,7 +727,7 @@ jQuery(document).ready(function($) {
         btn.prop('disabled', true).text('MEMPROSES...');
 
         $.ajax({
-            url: ajaxurl + '?action=okj_pos_checkout',
+            url: safeAjaxUrl + '?action=okj_pos_checkout',
             type: 'POST',
             contentType: 'application/json',
             dataType: 'json',
@@ -773,7 +774,7 @@ jQuery(document).ready(function($) {
 
         // Load items from database to render accurately
         $.ajax({
-            url: ajaxurl,
+            url: safeAjaxUrl,
             type: 'GET',
             data: {
                 action: 'okj_pos_checkout', // We can repurpose checkout or fetch
@@ -883,7 +884,7 @@ jQuery(document).ready(function($) {
         btn.prop('disabled', true).text('MENGIRIM...');
 
         $.ajax({
-            url: ajaxurl,
+            url: safeAjaxUrl,
             type: 'POST',
             data: {
                 action: 'okj_pos_send_wa_struk',

@@ -1,4 +1,4 @@
-﻿<?php if (!defined('ABSPATH')) { exit; } ?>
+<?php if (!defined('ABSPATH')) { exit; } ?>
 <div class="okj-wrap">
     <?php if ($action === 'add' || $action === 'edit'): ?>
         <!-- Add / Edit Page -->
@@ -113,6 +113,16 @@
                                 </label>
                             </div>
                         </div>
+
+                        <div class="okj-form-group">
+                            <label class="okj-label">Pengaturan Tampilan POS</label>
+                            <div style="margin-top: 8px; display: flex; align-items: center;">
+                                <label class="okj-label" style="display: flex; align-items: center; font-weight: 500; cursor: pointer; margin-bottom: 0; font-size: 13.5px; color: #1e293b;">
+                                    <input type="checkbox" name="show_in_pos" value="1" style="margin-right: 8px; width: 16px; height: 16px; cursor: pointer;" <?php echo !$row || !isset($row['show_in_pos']) || $row['show_in_pos'] == 1 ? 'checked' : ''; ?> />
+                                    Tampilkan di POS & Pemesanan Mandiri
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="okj-form-group okj-mt-1">
@@ -178,14 +188,20 @@
                                     <td><code><?php echo esc_html(substr($r['id'], 0, 8)); ?></code></td>
                                     <td>
                                         <strong><?php echo esc_html($r['name']); ?></strong>
-                                        <?php if (!empty($r['affiliate_url'])): ?>
-                                            <div style="margin-top: 4px; display: flex; gap: 6px; align-items: center;">
-                                                <span class="okj-badge" style="background: linear-gradient(135deg, #ec4899, #f43f5e); color: #ffffff; border: none; font-size: 10px; padding: 2px 6px;">Affiliate</span>
+                                        <div style="margin-top: 6px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                                            <?php if (isset($r['show_in_pos']) && $r['show_in_pos'] == 1): ?>
+                                                <span class="okj-badge" style="background: #e0f2fe; color: #0369a1; border: 1.5px solid #bae6fd; font-size: 10px; padding: 2px 6px; font-weight: 700; border-radius: 4px;">POS</span>
+                                            <?php else: ?>
+                                                <span class="okj-badge" style="background: #f1f5f9; color: #64748b; border: 1.5px solid #e2e8f0; font-size: 10px; padding: 2px 6px; font-weight: 700; border-radius: 4px;">Hanya Reseller</span>
+                                            <?php endif; ?>
+                                            
+                                            <?php if (!empty($r['affiliate_url'])): ?>
+                                                <span class="okj-badge" style="background: linear-gradient(135deg, #ec4899, #f43f5e); color: #ffffff; border: none; font-size: 10px; padding: 2px 6px; font-weight: 700; border-radius: 4px;">Affiliate</span>
                                                 <a href="<?php echo esc_url($r['affiliate_url']); ?>" target="_blank" style="text-decoration: none; color: #4f46e5; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center;" title="Kunjungi Link">
                                                     <span class="dashicons dashicons-admin-links" style="font-size: 12px; width: 12px; height: 12px; margin-right: 2px;"></span> Kunjungi
                                                 </a>
-                                            </div>
-                                        <?php endif; ?>
+                                            <?php endif; ?>
+                                        </div>
                                     </td>
                                     <td><span class="okj-badge okj-badge-secondary"><?php echo esc_html($r['category'] ?: 'Umum'); ?></span></td>
                                     <td>

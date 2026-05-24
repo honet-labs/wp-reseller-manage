@@ -67,6 +67,7 @@ class OKJ_DB {
             sale_price BIGINT(20) NOT NULL DEFAULT 0,
             duration_days INT(11) NOT NULL DEFAULT 0,
             affiliate_url TEXT NULL,
+            show_in_pos TINYINT(1) NOT NULL DEFAULT 1,
             description LONGTEXT NULL,
             notes LONGTEXT NULL,
             created_at DATETIME NOT NULL,

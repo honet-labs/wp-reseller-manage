@@ -152,6 +152,13 @@ class OKJ_Admin {
 
     public function view_product_prices() {
         global $wpdb;
+
+        // Self-healing database check for show_in_pos column
+        $col_check = $wpdb->get_results("SHOW COLUMNS FROM " . OKJ_DB::get_table('product_prices') . " LIKE 'show_in_pos'");
+        if (empty($col_check)) {
+            OKJ_DB::install();
+        }
+
         $action = !empty($_GET['action']) ? sanitize_text_field($_GET['action']) : 'list';
 
         if ($action === 'add' || $action === 'edit') {
@@ -450,6 +457,7 @@ class OKJ_Admin {
             'sale_price' => (float)$_POST['sale_price'],
             'duration_days' => (int)$_POST['duration_days'],
             'affiliate_url' => !empty($_POST['affiliate_url']) ? esc_url_raw($_POST['affiliate_url']) : '',
+            'show_in_pos' => isset($_POST['show_in_pos']) ? 1 : 0,
             'description' => wp_kses_post($_POST['description']),
             'notes' => wp_kses_post($_POST['notes']),
             'updated_at' => current_time('mysql'),
@@ -1278,7 +1286,7 @@ class OKJ_Admin {
             OKJ_DB::install();
         }
 
-        $query = "SELECT * FROM {$table} WHERE 1=1";
+        $query = "SELECT * FROM {$table} WHERE show_in_pos = 1";
         $params = [];
 
         if (!empty($search)) {
@@ -1611,7 +1619,7 @@ class OKJ_Admin {
         $category = isset($_GET['category']) ? sanitize_text_field($_GET['category']) : '';
 
         $table = OKJ_DB::get_table('product_prices');
-        $query = "SELECT * FROM {$table} WHERE 1=1";
+        $query = "SELECT * FROM {$table} WHERE show_in_pos = 1";
         $params = [];
 
         if (!empty($search)) {

@@ -930,22 +930,38 @@ jQuery(document).ready(function($) {
         $.ajax({
             url: safeAjaxUrl,
             type: 'POST',
+            dataType: 'text', // Read as raw text to safely parse BOM or whitespace-prepended responses
             data: {
                 action: 'okj_pos_send_wa_struk',
                 transaction_id: txId,
                 whatsapp_no: phone
             },
-            success: function(response) {
+            success: function(rawResponse) {
                 btn.prop('disabled', false).html('<span class="dashicons dashicons-whatsapp" style="margin-right:2px; font-size:14px; width:14px; height:14px;"></span> Kirim');
-                if (response.success) {
-                    alert(response.data.message);
-                } else {
-                    alert('Gagal kirim WhatsApp: ' + response.data.message);
+                try {
+                    let cleanJson = rawResponse.trim();
+                    let jsonStart = cleanJson.indexOf('{"success":');
+                    if (jsonStart !== -1) {
+                        cleanJson = cleanJson.substring(jsonStart);
+                    }
+                    let response = JSON.parse(cleanJson);
+                    if (response.success) {
+                        alert(response.data.message);
+                    } else {
+                        alert('Gagal kirim WhatsApp: ' + (response.data && response.data.message ? response.data.message : 'Terjadi kesalahan sistem.'));
+                    }
+                } catch(e) {
+                    alert('Terjadi kesalahan parsing respon WhatsApp: ' + e.message);
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
                 btn.prop('disabled', false).html('<span class="dashicons dashicons-whatsapp" style="margin-right:2px; font-size:14px; width:14px; height:14px;"></span> Kirim');
-                alert('Terjadi kesalahan jaringan.');
+                let errorMsg = 'Terjadi kesalahan jaringan.';
+                if (xhr.responseText) {
+                    let snippet = xhr.responseText.trim().substring(0, 150).replace(/<[^>]*>/g, '');
+                    errorMsg += '\n\nDetail: ' + snippet;
+                }
+                alert(errorMsg);
             }
         });
     });

@@ -577,8 +577,17 @@ jQuery(document).ready(function($) {
                     $('#okj-pos-products-list').html('<p style="color:#ef4444; text-align:center;">Gagal memuat katalog.</p>');
                 }
             },
-            error: function() {
-                $('#okj-pos-products-list').html('<p style="color:#ef4444; text-align:center;">Terjadi kesalahan koneksi.</p>');
+            error: function(xhr, status, error) {
+                let errorMsg = 'Terjadi kesalahan koneksi.';
+                if (xhr.status) {
+                    errorMsg += ' (HTTP ' + xhr.status + ': ' + error + ')';
+                }
+                if (xhr.responseText) {
+                    // Show a short snippet of response body to catch DB errors, 403, or PHP fatals
+                    let snippet = xhr.responseText.trim().substring(0, 200).replace(/<[^>]*>/g, '');
+                    errorMsg += '<br><span style="font-size:11px; display:inline-block; margin-top:8px; color:#ef4444; word-break:break-all; background:#fee2e2; padding:4px 8px; border-radius:4px;">Detail: ' + snippet + '</span>';
+                }
+                $('#okj-pos-products-list').html('<p style="color:#ef4444; text-align:center; padding: 20px;">' + errorMsg + '</p>');
             }
         });
     }

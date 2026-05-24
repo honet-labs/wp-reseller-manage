@@ -31,14 +31,7 @@
     margin: 0;
 }
 
-/* Eliminate empty space from sidebar menu since no icon is used */
-#toplevel_page_okj-dashboard .wp-menu-image {
-    display: none !important;
-}
-#toplevel_page_okj-dashboard .wp-menu-name {
-    padding-left: 12px !important;
-    margin-left: 0 !important;
-}
+/* Sidebar menu icon restored */
 
 /* Buttons */
 .okj-btn {

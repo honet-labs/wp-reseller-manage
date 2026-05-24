@@ -50,6 +50,7 @@ class OKJ_Admin {
     public function register_menus() {
         $cap = 'okj_manage';
 
+        // Main OKJualin Manager Menu
         add_menu_page(
             'OKJualin',
             'OKJualin',
@@ -61,7 +62,6 @@ class OKJ_Admin {
         );
 
         add_submenu_page('okj-dashboard', 'Dashboard', 'Dashboard', $cap, 'okj-dashboard', [$this, 'view_dashboard']);
-        add_submenu_page('okj-dashboard', 'Point of Sale (POS)', 'Point of Sale (POS)', $cap, 'okj-pos', [$this, 'view_pos']);
         add_submenu_page('okj-dashboard', 'Daftar Harga Produk', 'Daftar Harga Produk', $cap, 'okj-product-prices', [$this, 'view_product_prices']);
         add_submenu_page('okj-dashboard', 'Pembelian Produk', 'Pembelian Produk', $cap, 'okj-reseller-products', [$this, 'view_reseller_products']);
         add_submenu_page('okj-dashboard', 'Customer', 'Customer', $cap, 'okj-customers', [$this, 'view_customers']);
@@ -72,6 +72,17 @@ class OKJ_Admin {
         add_submenu_page('okj-dashboard', 'Laporan', 'Laporan', 'okj_view_reports', 'okj-reports', [$this, 'view_reports']);
         add_submenu_page('okj-dashboard', 'Logs', 'Logs', 'okj_view_logs', 'okj-logs', [$this, 'view_logs']);
         add_submenu_page('okj-dashboard', 'Settings', 'Settings', 'okj_manage_settings', 'okj-settings', [$this, 'view_settings']);
+
+        // Dedicated Top-Level POS Menu (Premium UX ala WooCommerce)
+        add_menu_page(
+            'OKJualin POS',
+            'OKJualin - POS',
+            $cap,
+            'okj-pos',
+            [$this, 'view_pos'],
+            'dashicons-calculator',
+            59
+        );
     }
 
     public function enqueue_assets($hook) {

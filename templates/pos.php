@@ -758,7 +758,7 @@ jQuery(document).ready(function($) {
             url: safeAjaxUrl + '?action=okj_pos_checkout',
             type: 'POST',
             contentType: 'application/json',
-            dataType: 'json',
+            dataType: 'text', // Read as raw text to safely parse BOM or whitespace-prepended responses
             data: JSON.stringify({
                 customer_id: customerId,
                 seller_id: sellerId,
@@ -767,17 +767,33 @@ jQuery(document).ready(function($) {
                 payment_method: paymentMethod,
                 items: cart
             }),
-            success: function(response) {
+            success: function(rawResponse) {
                 btn.prop('disabled', false).html('<span class="dashicons dashicons-saved"></span> PROSES & BAYAR SEKARANG');
-                if (response.success) {
-                    showReceiptModal(response.data);
-                } else {
-                    alert('Gagal checkout: ' + response.data.message);
+                try {
+                    let cleanJson = rawResponse.trim();
+                    let jsonStart = cleanJson.indexOf('{"success":');
+                    if (jsonStart !== -1) {
+                        cleanJson = cleanJson.substring(jsonStart);
+                    }
+                    let response = JSON.parse(cleanJson);
+                    
+                    if (response.success) {
+                        showReceiptModal(response.data);
+                    } else {
+                        alert('Gagal checkout: ' + (response.data && response.data.message ? response.data.message : 'Terjadi kesalahan sistem.'));
+                    }
+                } catch(e) {
+                    alert('Terjadi kesalahan parsing respon server: ' + e.message);
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
                 btn.prop('disabled', false).html('<span class="dashicons dashicons-saved"></span> PROSES & BAYAR SEKARANG');
-                alert('Terjadi kesalahan jaringan.');
+                let errorMsg = 'Terjadi kesalahan jaringan saat checkout.';
+                if (xhr.responseText) {
+                    let snippet = xhr.responseText.trim().substring(0, 150).replace(/<[^>]*>/g, '');
+                    errorMsg += '\n\nDetail: ' + snippet;
+                }
+                alert(errorMsg);
             }
         });
     });

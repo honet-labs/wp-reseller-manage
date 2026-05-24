@@ -541,44 +541,59 @@ jQuery(document).ready(function($) {
         $.ajax({
             url: safeAjaxUrl,
             type: 'GET',
+            dataType: 'text',
             data: {
                 action: 'okj_pos_get_products',
                 search: search,
                 category: category
             },
-            success: function(response) {
-                if (response.success) {
-                    let html = '';
-                    if (response.data.length === 0) {
-                        html = `
-                            <div class="okj-pos-loader">
-                                <span class="dashicons dashicons-search" style="font-size:32px; width:32px; height:32px; color:#cbd5e1; margin-bottom:8px;"></span>
-                                <p>Produk tidak ditemukan.</p>
-                            </div>
-                        `;
-                    } else {
-                        response.data.forEach(function(p) {
-                            let formattedPrice = 'Rp ' + Number(p.sale_price).toLocaleString('id-ID');
-                            html += `
-                                <div class="okj-pos-product-card" data-id="${p.id}" data-name="${p.name}" data-price="${p.sale_price}">
-                                    <div>
-                                        <h3 class="okj-pos-p-title">${p.name}</h3>
-                                        <div class="okj-pos-p-meta">
-                                            <span class="okj-pos-p-cat">${p.category || 'Umum'}</span>
-                                            ${p.duration_days > 0 ? `<span class="okj-pos-p-dur">${p.duration_days} Hari</span>` : ''}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p class="okj-pos-p-price">${formattedPrice}</p>
-                                        <button type="button" class="okj-pos-p-add-btn">+ Tambah</button>
-                                    </div>
+            success: function(rawResponse) {
+                try {
+                    let cleanJson = rawResponse.trim();
+                    let jsonStart = cleanJson.indexOf('{"success":');
+                    if (jsonStart !== -1) {
+                        cleanJson = cleanJson.substring(jsonStart);
+                    }
+                    let response = JSON.parse(cleanJson);
+
+                    if (response.success) {
+                        let html = '';
+                        if (response.data.length === 0) {
+                            html = `
+                                <div class="okj-pos-loader">
+                                    <span class="dashicons dashicons-search" style="font-size:32px; width:32px; height:32px; color:#cbd5e1; margin-bottom:8px;"></span>
+                                    <p>Produk tidak ditemukan.</p>
                                 </div>
                             `;
-                        });
+                        } else {
+                            response.data.forEach(function(p) {
+                                let formattedPrice = 'Rp ' + Number(p.sale_price).toLocaleString('id-ID');
+                                html += `
+                                    <div class="okj-pos-product-card" data-id="${p.id}" data-name="${p.name}" data-price="${p.sale_price}">
+                                        <div>
+                                            <h3 class="okj-pos-p-title">${p.name}</h3>
+                                            <div class="okj-pos-p-meta">
+                                                <span class="okj-pos-p-cat">${p.category || 'Umum'}</span>
+                                                ${p.duration_days > 0 ? `<span class="okj-pos-p-dur">${p.duration_days} Hari</span>` : ''}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="okj-pos-p-price">${formattedPrice}</p>
+                                            <button type="button" class="okj-pos-p-add-btn">+ Tambah</button>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                        }
+                        $('#okj-pos-products-list').html(html);
+                    } else {
+                        $('#okj-pos-products-list').html('<p style="color:#ef4444; text-align:center;">Gagal memuat katalog.</p>');
                     }
-                    $('#okj-pos-products-list').html(html);
-                } else {
-                    $('#okj-pos-products-list').html('<p style="color:#ef4444; text-align:center;">Gagal memuat katalog.</p>');
+                } catch(e) {
+                    let errorMsg = 'Terjadi kesalahan parsing JSON.';
+                    let snippet = rawResponse.trim().substring(0, 150).replace(/<[^>]*>/g, '');
+                    errorMsg += '<br><span style="font-size:11px; display:inline-block; margin-top:8px; color:#ef4444; word-break:break-all; background:#fee2e2; padding:4px 8px; border-radius:4px;">Detail: ' + snippet + '</span>';
+                    $('#okj-pos-products-list').html('<p style="color:#ef4444; text-align:center; padding: 20px;">' + errorMsg + '</p>');
                 }
             },
             error: function(xhr, status, error) {

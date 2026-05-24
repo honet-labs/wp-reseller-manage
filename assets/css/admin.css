@@ -7,6 +7,7 @@
     margin: 24px 24px 24px 8px !important;
     max-width: none !important;
     width: auto !important;
+    display: flow-root;
 }
 
 /* Header & Typography */

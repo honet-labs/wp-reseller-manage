@@ -1,5 +1,5 @@
 <?php if (!defined('ABSPATH')) { exit; } ?>
-<div class="okj-wrap">
+<div class="wrap okj-wrap">
     <div class="okj-header">
         <div>
             <h1>Pengaturan OKJualin</h1>

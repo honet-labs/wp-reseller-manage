@@ -314,14 +314,45 @@ class OKJ_Admin {
             $resellers = $wpdb->get_results("SELECT r.id, r.product_name, r.duration_days, r.price, r.purchase_date, s.name as seller_name, (SELECT COUNT(*) FROM " . OKJ_DB::get_table('active_products') . " WHERE reseller_product_id = r.id) as is_used FROM " . OKJ_DB::get_table('reseller_products') . " r LEFT JOIN " . OKJ_DB::get_table('sellers') . " s ON r.seller_id = s.id ORDER BY r.product_name ASC", ARRAY_A);
             $this->render_template('active-products', ['action' => $action, 'row' => $row, 'customers' => $customers, 'resellers' => $resellers]);
         } else {
+            // First: Self-healing check: Auto-update statuses where expires_at < today
+            $today = wp_date('Y-m-d');
+            $wpdb->query($wpdb->prepare(
+                "UPDATE " . OKJ_DB::get_table('active_products') . " 
+                 SET status = 'expired' 
+                 WHERE expires_at < %s AND status = 'active'", 
+                $today
+            ));
+
+            $status_filter = !empty($_GET['status_filter']) ? sanitize_text_field($_GET['status_filter']) : 'active';
             $per_page = 15;
             $paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
             $offset = ($paged - 1) * $per_page;
 
-            $total_rows = $wpdb->get_var("SELECT COUNT(*) FROM " . OKJ_DB::get_table('active_products'));
+            $table_ap = OKJ_DB::get_table('active_products');
+            $table_cust = OKJ_DB::get_table('customers');
+
+            // Build conditional WHERE clause
+            $where = "1=1";
+            if ($status_filter === 'active') {
+                $where .= " AND a.status = 'active'";
+            } elseif ($status_filter === 'expired') {
+                $where .= " AND a.status = 'expired'";
+            }
+
+            $total_rows = $wpdb->get_var("SELECT COUNT(*) FROM {$table_ap} a WHERE {$where}");
             $total_pages = ceil($total_rows / $per_page);
 
-            $rows = $wpdb->get_results($wpdb->prepare("SELECT a.*, c.name as customer_name, c.email as customer_email, c.phone as customer_phone, c.telegram as customer_telegram, c.whatsapp as customer_whatsapp FROM " . OKJ_DB::get_table('active_products') . " a LEFT JOIN " . OKJ_DB::get_table('customers') . " c ON a.customer_id = c.id ORDER BY a.expires_at ASC LIMIT %d OFFSET %d", $per_page, $offset), ARRAY_A);
+            $rows = $wpdb->get_results($wpdb->prepare(
+                "SELECT a.*, c.name as customer_name, c.email as customer_email, c.phone as customer_phone, c.telegram as customer_telegram, c.whatsapp as customer_whatsapp 
+                 FROM {$table_ap} a 
+                 LEFT JOIN {$table_cust} c ON a.customer_id = c.id 
+                 WHERE {$where} 
+                 ORDER BY a.expires_at ASC 
+                 LIMIT %d OFFSET %d",
+                $per_page,
+                $offset
+            ), ARRAY_A);
+
             $this->render_template('active-products', [
                 'action' => 'list', 
                 'rows' => $rows,

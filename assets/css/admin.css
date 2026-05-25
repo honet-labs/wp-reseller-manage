@@ -799,3 +799,13 @@
     margin-top: 12px;
 }
 
+/* Premium Filter Tabs Hover & States */
+.okj-tab-item:hover {
+    color: #4f46e5 !important;
+    background: #e2e8f0 !important;
+}
+.okj-tab-item.okj-tab-active:hover {
+    color: #ffffff !important;
+    background: #4338ca !important;
+}
+

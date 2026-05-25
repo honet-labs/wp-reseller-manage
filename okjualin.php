@@ -2,7 +2,7 @@
 /**
  * Plugin Name: OKJualin
  * Description: Manajemen reseller premium: master harga, reseller product, customer, active product tracker, automated reminders (email/telegram/whatsapp WAHA), brandable PDF invoice customizer, JSON backup & ECharts analytics dashboard.
- * Version: 0.1.1
+ * Version: 0.1.2
  * Author: HONET
  * License: GPLv2 or later
  * Text Domain: okjualin
@@ -11,7 +11,7 @@
 if (!defined('ABSPATH')) { exit; }
 
 class OKJ_App {
-    const VERSION = '0.1.1';
+    const VERSION = '0.1.2';
 
     private static $instance = null;
     public static function instance() {
@@ -118,10 +118,13 @@ class OKJ_App {
     public function maybe_upgrade_db() {
         global $wpdb;
         $t_customers = OKJ_DB::get_table('customers');
-        $table_exists = $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $t_customers)) === $t_customers;
+        $t_renewals = OKJ_DB::get_table('active_product_renewals');
+
+        $customers_exists = $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $t_customers)) === $t_customers;
+        $renewals_exists = $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $t_renewals)) === $t_renewals;
 
         $db_ver = get_option('okj_db_version', '');
-        if ($db_ver !== self::VERSION || !$table_exists) {
+        if ($db_ver !== self::VERSION || !$customers_exists || !$renewals_exists) {
             OKJ_DB::install();
             update_option('okj_db_version', self::VERSION);
         }

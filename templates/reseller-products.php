@@ -1,4 +1,4 @@
-﻿<?php if (!defined('ABSPATH')) { exit; } ?>
+<?php if (!defined('ABSPATH')) { exit; } ?>
 <div class="okj-wrap">
     <?php if ($action === 'add' || $action === 'edit'): ?>
         <!-- Add / Edit Page -->
@@ -134,15 +134,43 @@
 
         <div class="okj-card okj-mt-2">
             <div class="okj-card-body">
+                <?php
+                $current_status_filter = !empty($_GET['status_filter']) ? sanitize_text_field($_GET['status_filter']) : 'active';
+                ?>
+                <div class="okj-tabs-wrapper" style="display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                    <div class="okj-status-tabs" style="display: flex; gap: 4px; background: #f1f5f9; padding: 4px; border-radius: 8px;">
+                        <a href="<?php echo admin_url('admin.php?page=okj-reseller-products&status_filter=active'); ?>" 
+                           class="okj-tab-item <?php echo $current_status_filter === 'active' ? 'okj-tab-active' : ''; ?>"
+                           style="text-decoration: none; padding: 6px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; transition: all 0.2s; color: <?php echo $current_status_filter === 'active' ? '#ffffff' : '#64748b'; ?>; background: <?php echo $current_status_filter === 'active' ? '#4f46e5' : 'transparent'; ?>; box-shadow: <?php echo $current_status_filter === 'active' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none'; ?>;">
+                            <span class="dashicons dashicons-yes-alt" style="font-size: 16px; width: 16px; height: 16px; margin-top: 1px; margin-right: 4px;"></span>
+                            Aktif
+                        </a>
+                        <a href="<?php echo admin_url('admin.php?page=okj-reseller-products&status_filter=expired'); ?>" 
+                           class="okj-tab-item <?php echo $current_status_filter === 'expired' ? 'okj-tab-active' : ''; ?>"
+                           style="text-decoration: none; padding: 6px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; transition: all 0.2s; color: <?php echo $current_status_filter === 'expired' ? '#ffffff' : '#64748b'; ?>; background: <?php echo $current_status_filter === 'expired' ? '#4f46e5' : 'transparent'; ?>; box-shadow: <?php echo $current_status_filter === 'expired' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none'; ?>;">
+                            <span class="dashicons dashicons-no-alt" style="font-size: 16px; width: 16px; height: 16px; margin-top: 1px; margin-right: 4px;"></span>
+                            Expired
+                        </a>
+                        <a href="<?php echo admin_url('admin.php?page=okj-reseller-products&status_filter=all'); ?>" 
+                           class="okj-tab-item <?php echo $current_status_filter === 'all' ? 'okj-tab-active' : ''; ?>"
+                           style="text-decoration: none; padding: 6px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; transition: all 0.2s; color: <?php echo $current_status_filter === 'all' ? '#ffffff' : '#64748b'; ?>; background: <?php echo $current_status_filter === 'all' ? '#4f46e5' : 'transparent'; ?>; box-shadow: <?php echo $current_status_filter === 'all' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none'; ?>;">
+                            <span class="dashicons dashicons-category" style="font-size: 16px; width: 16px; height: 16px; margin-top: 1px; margin-right: 4px;"></span>
+                            Semua Data
+                        </a>
+                    </div>
+                    <?php if (!empty($rows)): ?>
+                        <div class="okj-search-container" style="display: flex; gap: 8px; align-items: center;">
+                            <input type="text" class="okj-input okj-table-search" placeholder="Cari data..." style="max-width: 250px; width: 100%; margin-bottom: 0;" />
+                        </div>
+                    <?php endif; ?>
+                </div>
+
                 <?php if (empty($rows)): ?>
-                    <div class="okj-empty-state">
-                        <span class="dashicons dashicons-info"></span>
-                        <p>Belum ada data pembelian produk reseller.</p>
+                    <div class="okj-empty-state" style="padding: 48px 24px; text-align: center;">
+                        <span class="dashicons dashicons-info" style="font-size: 36px; width: 36px; height: 36px; color: #94a3b8; margin-bottom: 12px; display: inline-block;"></span>
+                        <p style="margin: 0; font-size: 15px; color: #64748b; font-weight: 500;">Tidak ada pembelian produk dengan status filter ini.</p>
                     </div>
                 <?php else: ?>
-                    <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
-                        <input type="text" class="okj-input okj-table-search" placeholder="Cari data..." style="max-width: 300px; width: 100%;" />
-                    </div>
                     <table class="okj-table">
                         <thead>
                             <tr>
